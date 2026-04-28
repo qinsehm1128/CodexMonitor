@@ -5,6 +5,7 @@ import type {
 } from "@/types";
 import type { OpenAppDraft, ShortcutDrafts } from "./settingsTypes";
 import { SETTINGS_MOBILE_BREAKPOINT_PX } from "./settingsViewConstants";
+import { i18n } from "@/i18n/config";
 
 export const normalizeOverrideValue = (value: string): string | null => {
   const trimmed = value.trim();
@@ -126,18 +127,24 @@ export const buildEditorContentMeta = ({
   truncated,
   isDirty,
 }: EditorContentMetaInput) => {
-  const status = isLoading ? "Loading…" : isSaving ? "Saving…" : exists ? "" : "Not found";
+  const status = isLoading
+    ? i18n.t("settings.editorMeta.loading")
+    : isSaving
+      ? i18n.t("settings.editorMeta.saving")
+      : exists
+        ? ""
+        : i18n.t("settings.editorMeta.notFound");
   const metaParts: string[] = [];
   if (status) {
     metaParts.push(status);
   }
   if (truncated) {
-    metaParts.push("Truncated");
+    metaParts.push(i18n.t("settings.editorMeta.truncated"));
   }
 
   return {
     meta: metaParts.join(" · "),
-    saveLabel: exists ? "Save" : "Create",
+    saveLabel: exists ? i18n.t("common.actions.save") : i18n.t("settings.editorMeta.create"),
     saveDisabled: isLoading || isSaving || !isDirty,
     refreshDisabled: isLoading || isSaving,
   };

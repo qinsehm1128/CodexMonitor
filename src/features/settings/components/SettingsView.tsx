@@ -13,9 +13,9 @@ import { useSettingsViewCloseShortcuts } from "@settings/hooks/useSettingsViewCl
 import { useSettingsViewNavigation } from "@settings/hooks/useSettingsViewNavigation";
 import { useSettingsViewOrchestration } from "@settings/hooks/useSettingsViewOrchestration";
 import { ModalShell } from "@/features/design-system/components/modal/ModalShell";
+import { useT } from "@/i18n/useT";
 import { SettingsNav } from "./SettingsNav";
 import type { CodexSection } from "./settingsTypes";
-import { SETTINGS_SECTION_LABELS } from "./settingsViewConstants";
 import { SettingsSectionContainers } from "./sections/SettingsSectionContainers";
 
 export type SettingsViewProps = {
@@ -99,6 +99,7 @@ export function SettingsView({
   onRemoveDictationModel,
   initialSection,
 }: SettingsViewProps) {
+  const { t } = useT();
   const {
     activeSection,
     showMobileDetail,
@@ -140,7 +141,7 @@ export function SettingsView({
 
   useSettingsViewCloseShortcuts(onClose);
 
-  const activeSectionLabel = SETTINGS_SECTION_LABELS[activeSection];
+  const activeSectionLabel = t(`settings.nav.${activeSection === "open-apps" ? "openApps" : activeSection}`);
   const settingsBodyClassName = `settings-body${
     useMobileMasterDetail ? " settings-body-mobile-master-detail" : ""
   }${useMobileMasterDetail && showMobileDetail ? " is-detail-visible" : ""}`;
@@ -154,13 +155,13 @@ export function SettingsView({
     >
       <div className="settings-titlebar">
         <div className="settings-title" id="settings-modal-title">
-          Settings
+          {t("settings.modal.title")}
         </div>
         <button
           type="button"
           className="ghost icon-button settings-close"
           onClick={onClose}
-          aria-label="Close settings"
+          aria-label={t("settings.modal.close")}
         >
           <X aria-hidden />
         </button>
@@ -183,10 +184,10 @@ export function SettingsView({
                   type="button"
                   className="settings-mobile-back"
                   onClick={() => setShowMobileDetail(false)}
-                  aria-label="Back to settings sections"
+                  aria-label={t("settings.modal.sections")}
                 >
                   <ChevronLeft aria-hidden />
-                  Sections
+                  {t("settings.modal.sections")}
                 </button>
                 <div className="settings-mobile-detail-title">{activeSectionLabel}</div>
               </div>

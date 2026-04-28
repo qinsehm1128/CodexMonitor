@@ -10,6 +10,7 @@ import {
   getPromptArgumentHint,
 } from "../../../utils/customPrompts";
 import { isComposingEvent } from "../../../utils/keys";
+import { useT } from "@/i18n/useT";
 
 type Skill = { name: string; description?: string };
 type UseComposerAutocompleteStateArgs = {
@@ -84,6 +85,7 @@ export function useComposerAutocompleteState({
   setSelectionStart,
   onItemApplied,
 }: UseComposerAutocompleteStateArgs) {
+  const { t } = useT();
   const skillItems = useMemo<AutocompleteItem[]>(
     () => [
       ...skills.map((skill) => ({
@@ -91,7 +93,7 @@ export function useComposerAutocompleteState({
         label: skill.name,
         description: skill.description,
         insertText: skill.name,
-        group: "Skills" as const,
+        group: t("composer.autocomplete.groups.skills"),
       })),
       ...apps
         .filter((app) => app.isAccessible)
@@ -100,11 +102,11 @@ export function useComposerAutocompleteState({
           label: app.name,
           description: app.description,
           insertText: connectorMentionSlug(app.name),
-          group: "Apps" as const,
+          group: t("composer.autocomplete.groups.apps"),
           mentionPath: `app://${app.id}`,
         })),
     ],
-    [apps, skills],
+    [apps, skills, t],
   );
 
   const fileTriggerActive = useMemo(
@@ -121,11 +123,11 @@ export function useComposerAutocompleteState({
               id: path,
               label: path,
               insertText: path,
-              group: "Files" as const,
+              group: t("composer.autocomplete.groups.files"),
             }));
           })()
         : [],
-    [fileTriggerActive, files, selectionStart, text],
+    [fileTriggerActive, files, selectionStart, t, text],
   );
 
   const promptItems = useMemo<AutocompleteItem[]>(
@@ -141,10 +143,10 @@ export function useComposerAutocompleteState({
             hint: getPromptArgumentHint(prompt),
             insertText: insert.text,
             cursorOffset: insert.cursorOffset,
-            group: "Prompts" as const,
+            group: t("composer.autocomplete.groups.prompts"),
           };
         }),
-    [prompts],
+    [prompts, t],
   );
 
   const slashCommandItems = useMemo<AutocompleteItem[]>(() => {
@@ -152,71 +154,71 @@ export function useComposerAutocompleteState({
       {
         id: "compact",
         label: "compact",
-        description: "compact the active thread context",
+        description: t("composer.autocomplete.slash.compact"),
         insertText: "compact",
-        group: "Slash",
+        group: t("composer.autocomplete.groups.slash"),
       },
       {
         id: "fast",
         label: "fast",
-        description: "toggle Fast mode for upcoming turns",
+        description: t("composer.autocomplete.slash.fast"),
         insertText: "fast",
-        group: "Slash",
+        group: t("composer.autocomplete.groups.slash"),
       },
       {
         id: "fork",
         label: "fork",
-        description: "branch into a new thread",
+        description: t("composer.autocomplete.slash.fork"),
         insertText: "fork",
-        group: "Slash",
+        group: t("composer.autocomplete.groups.slash"),
       },
       {
         id: "mcp",
         label: "mcp",
-        description: "list configured MCP tools",
+        description: t("composer.autocomplete.slash.mcp"),
         insertText: "mcp",
-        group: "Slash",
+        group: t("composer.autocomplete.groups.slash"),
       },
       {
         id: "new",
         label: "new",
-        description: "start a new chat",
+        description: t("composer.autocomplete.slash.new"),
         insertText: "new",
-        group: "Slash",
+        group: t("composer.autocomplete.groups.slash"),
       },
       {
         id: "review",
         label: "review",
-        description: "start a code review",
+        description: t("composer.autocomplete.slash.review"),
         insertText: "review",
-        group: "Slash",
+        group: t("composer.autocomplete.groups.slash"),
       },
       {
         id: "resume",
         label: "resume",
-        description: "refresh the active thread",
+        description: t("composer.autocomplete.slash.resume"),
         insertText: "resume",
-        group: "Slash",
+        group: t("composer.autocomplete.groups.slash"),
       },
       {
         id: "status",
         label: "status",
-        description: "show session status",
+        description: t("composer.autocomplete.slash.status"),
         insertText: "status",
-        group: "Slash",
+        group: t("composer.autocomplete.groups.slash"),
       },
     ];
     if (appsEnabled) {
       commands.push({
         id: "apps",
         label: "apps",
-        description: "list available apps",
+        description: t("composer.autocomplete.slash.apps"),
         insertText: "apps",
-        group: "Slash",
+        group: t("composer.autocomplete.groups.slash"),
       });
     }
     return commands.sort((a, b) => a.label.localeCompare(b.label));
-  }, [appsEnabled]);
+  }, [appsEnabled, t]);
 
   const slashItems = useMemo<AutocompleteItem[]>(
     () => [...slashCommandItems, ...promptItems],

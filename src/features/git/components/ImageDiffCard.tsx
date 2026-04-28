@@ -2,6 +2,7 @@ import { memo, useMemo } from "react";
 import ImageOff from "lucide-react/dist/esm/icons/image-off";
 import RotateCcw from "lucide-react/dist/esm/icons/rotate-ccw";
 import { splitPath } from "./GitDiffPanel.utils";
+import { i18n } from "@/i18n/config";
 
 type ImageDiffCardProps = {
   path: string;
@@ -79,7 +80,7 @@ export const ImageDiffCard = memo(function ImageDiffCard({
   const isAdded = status === "A";
   const isDeleted = status === "D";
   const isModified = !isAdded && !isDeleted;
-  const placeholderLabel = "Image preview unavailable.";
+  const placeholderLabel = i18n.t("app.gitViewer.imageUnavailable");
   const renderPlaceholder = () => (
     <div className="image-diff-placeholder">
       <ImageOff className="image-diff-placeholder-icon" aria-hidden />
@@ -104,8 +105,8 @@ export const ImageDiffCard = memo(function ImageDiffCard({
           <button
             type="button"
             className="diff-viewer-header-action diff-viewer-header-action--discard"
-            title="Discard changes in this file"
-            aria-label="Discard changes in this file"
+            title={i18n.t("app.gitViewer.discardChangesInFile")}
+            aria-label={i18n.t("app.gitViewer.discardChangesInFile")}
             onClick={(event) => {
               event.preventDefault();
               event.stopPropagation();
@@ -123,7 +124,7 @@ export const ImageDiffCard = memo(function ImageDiffCard({
               {oldDataUri ? (
                 <img
                   src={oldDataUri}
-                  alt="Previous version"
+                  alt={i18n.t("app.gitViewer.previousVersion")}
                   className="image-diff-preview"
                 />
               ) : (
@@ -135,7 +136,7 @@ export const ImageDiffCard = memo(function ImageDiffCard({
               {newDataUri ? (
                 <img
                   src={newDataUri}
-                  alt="Current version"
+                  alt={i18n.t("app.gitViewer.currentVersion")}
                   className="image-diff-preview"
                 />
               ) : (
@@ -151,7 +152,7 @@ export const ImageDiffCard = memo(function ImageDiffCard({
               {newDataUri ? (
                 <img
                   src={newDataUri}
-                  alt="New image"
+                  alt={i18n.t("app.gitViewer.newImage")}
                   className="image-diff-preview"
                 />
               ) : (
@@ -167,7 +168,7 @@ export const ImageDiffCard = memo(function ImageDiffCard({
               {oldDataUri ? (
                 <img
                   src={oldDataUri}
-                  alt="Deleted image"
+                  alt={i18n.t("app.gitViewer.deletedImage")}
                   className="image-diff-preview"
                 />
               ) : (

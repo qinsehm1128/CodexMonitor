@@ -14,6 +14,7 @@ import {
   splitNameAndExtension,
   splitPath,
 } from "./GitDiffPanel.utils";
+import { i18n } from "@/i18n/config";
 
 export type DiffFile = {
   path: string;
@@ -63,12 +64,12 @@ export function CommitButton({
         disabled={!canCommit}
         title={
           !hasMessage
-            ? "Enter a commit message"
+            ? i18n.t("git.panel.enterCommitMessage")
             : !hasChanges
-              ? "No changes to commit"
+              ? i18n.t("git.panel.noChangesToCommit")
               : hasStagedFiles
-                ? "Commit staged changes"
-                : "Commit all unstaged changes"
+                ? i18n.t("git.panel.commitStaged")
+                : i18n.t("git.panel.commitAllUnstaged")
         }
       >
         {commitLoading ? (
@@ -88,7 +89,7 @@ export function CommitButton({
             <path d="M20 6 9 17l-5-5" />
           </svg>
         )}
-        <span>{commitLoading ? "Committing..." : "Commit"}</span>
+        <span>{commitLoading ? i18n.t("git.panel.committing") : i18n.t("git.panel.commit")}</span>
       </button>
     </div>
   );
@@ -129,8 +130,8 @@ export function SidebarError({
         type="button"
         className="ghost icon-button sidebar-error-dismiss"
         onClick={onDismiss}
-        aria-label="Dismiss error"
-        title="Dismiss error"
+        aria-label={i18n.t("git.panel.dismissError")}
+        title={i18n.t("git.panel.dismissError")}
       >
         <X size={12} aria-hidden />
       </button>
@@ -203,7 +204,7 @@ function DiffFileRow({
           <span className="diff-sep">/</span>
           <span className="diff-del">-{file.deletions}</span>
         </span>
-        <div className="diff-row-actions" role="group" aria-label="File actions">
+        <div className="diff-row-actions" role="group" aria-label={i18n.t("git.panel.fileActions")}>
           {showStage && (
             <button
               type="button"
@@ -212,9 +213,9 @@ function DiffFileRow({
                 event.stopPropagation();
                 void onStageFile?.(file.path);
               }}
-              data-tooltip="Stage Changes"
+              data-tooltip={i18n.t("git.panel.stageFile")}
               data-tooltip-align="end"
-              aria-label="Stage file"
+              aria-label={i18n.t("git.panel.stageFile")}
             >
               <Plus size={12} aria-hidden />
             </button>
@@ -227,9 +228,9 @@ function DiffFileRow({
                 event.stopPropagation();
                 void onUnstageFile?.(file.path);
               }}
-              data-tooltip="Unstage Changes"
+              data-tooltip={i18n.t("git.panel.unstageFile")}
               data-tooltip-align="end"
-              aria-label="Unstage file"
+              aria-label={i18n.t("git.panel.unstageFile")}
             >
               <Minus size={12} aria-hidden />
             </button>
@@ -242,9 +243,9 @@ function DiffFileRow({
                 event.stopPropagation();
                 void onDiscardFile?.(file.path);
               }}
-              data-tooltip="Discard Changes"
+              data-tooltip={i18n.t("git.panel.discardChanges")}
               data-tooltip-align="end"
-              aria-label="Discard changes"
+              aria-label={i18n.t("git.panel.discardChanges")}
             >
               <RotateCcw size={12} aria-hidden />
             </button>
@@ -330,7 +331,7 @@ export function DiffSection({
           <span className="diff-section-count">{files.length}</span>
         </div>
         {showSectionActions && (
-          <div className="diff-section-actions" role="group" aria-label={`${title} actions`}>
+          <div className="diff-section-actions" role="group" aria-label={`${title} ${i18n.t("git.panel.fileActions")}`}>
             {canApplyWorktree && (
               <button
                 type="button"
@@ -339,9 +340,9 @@ export function DiffSection({
                   void onApplyWorktreeChanges?.();
                 }}
                 disabled={worktreeApplyLoading || worktreeApplySuccess}
-                data-tooltip={worktreeApplyTitle ?? "Apply changes to parent workspace"}
+                data-tooltip={worktreeApplyTitle ?? i18n.t("git.panel.applyChangesToParent")}
                 data-tooltip-align="end"
-                aria-label="Apply worktree changes"
+                aria-label={i18n.t("git.panel.applyWorktreeChanges")}
               >
                 <WorktreeApplyIcon success={worktreeApplySuccess} />
               </button>
@@ -353,9 +354,9 @@ export function DiffSection({
                 onClick={() => {
                   void onReviewUncommittedChanges?.();
                 }}
-                data-tooltip="Review Uncommitted Changes"
+                data-tooltip={i18n.t("git.panel.reviewUncommitted")}
                 data-tooltip-align="end"
-                aria-label="Review uncommitted changes"
+                aria-label={i18n.t("git.panel.reviewUncommitted")}
               >
                 <MagicSparkleIcon size={12} />
               </button>
@@ -375,9 +376,9 @@ export function DiffSection({
                     }
                   })();
                 }}
-                data-tooltip="Stage All Changes"
+                data-tooltip={i18n.t("git.panel.stageAll")}
                 data-tooltip-align="end"
-                aria-label="Stage all changes"
+                aria-label={i18n.t("git.panel.stageAll")}
               >
                 <Plus size={12} aria-hidden />
               </button>
@@ -393,9 +394,9 @@ export function DiffSection({
                     }
                   })();
                 }}
-                data-tooltip="Unstage All Changes"
+                data-tooltip={i18n.t("git.panel.unstageAll")}
                 data-tooltip-align="end"
-                aria-label="Unstage all changes"
+                aria-label={i18n.t("git.panel.unstageAll")}
               >
                 <Minus size={12} aria-hidden />
               </button>
@@ -407,9 +408,9 @@ export function DiffSection({
                 onClick={() => {
                   void onDiscardFiles?.(filePaths);
                 }}
-                data-tooltip="Discard All Changes"
+                data-tooltip={i18n.t("git.panel.discardAll")}
                 data-tooltip-align="end"
-                aria-label="Discard all changes"
+                aria-label={i18n.t("git.panel.discardAll")}
               >
                 <RotateCcw size={12} aria-hidden />
               </button>
@@ -471,11 +472,11 @@ export function GitLogEntryRow({
         }
       }}
     >
-      <div className="git-log-summary">{entry.summary || "No message"}</div>
+      <div className="git-log-summary">{entry.summary || i18n.t("git.panel.noMessage")}</div>
       <div className="git-log-meta">
         <span className="git-log-sha">{entry.sha.slice(0, 7)}</span>
         <span className="git-log-sep">·</span>
-        <span className="git-log-author">{entry.author || "Unknown"}</span>
+        <span className="git-log-author">{entry.author || i18n.t("git.panel.unknownAuthor")}</span>
         <span className="git-log-sep">·</span>
         <span className="git-log-date">{formatRelativeTime(entry.timestamp * 1000)}</span>
       </div>

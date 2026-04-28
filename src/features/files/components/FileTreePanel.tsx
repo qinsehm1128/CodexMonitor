@@ -26,6 +26,7 @@ import { languageFromPath } from "../../../utils/syntax";
 import { joinWorkspacePath, revealInFileManagerLabel } from "../../../utils/platformPaths";
 import { getFileTypeIconUrl } from "../../../utils/fileTypeIcons";
 import { FilePreviewPopover } from "./FilePreviewPopover";
+import { useT } from "@/i18n/useT";
 
 type FileTreeNode = {
   name: string;
@@ -175,6 +176,7 @@ export function FileTreePanel({
   selectedOpenAppId,
   onSelectOpenAppId,
 }: FileTreePanelProps) {
+  const { t } = useT();
   const [filterMode, setFilterMode] = useState<"all" | "modified">("all");
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set());
   const [query, setQuery] = useState("");
@@ -556,7 +558,7 @@ export function FileTreePanel({
       const menu = await Menu.new({
         items: [
           await MenuItem.new({
-            text: "Add to chat",
+            text: t("app.fileTree.addToChat"),
             enabled: canInsertText,
             action: async () => {
               if (!canInsertText) {
@@ -577,7 +579,7 @@ export function FileTreePanel({
       const position = new LogicalPosition(event.clientX, event.clientY);
       await menu.popup(position, window);
     },
-    [canInsertText, onInsertText, resolvePath],
+    [canInsertText, onInsertText, resolvePath, t],
   );
 
   const renderRow = (entry: FileTreeRowEntry) => {
@@ -636,8 +638,8 @@ export function FileTreePanel({
               onInsertText?.(node.path);
             }}
             disabled={!canInsertText}
-            aria-label={`Mention ${node.name}`}
-            title="Mention in chat"
+            aria-label={`${t("app.fileTree.mentionInChat")} ${node.name}`}
+            title={t("app.fileTree.mentionInChat")}
           >
             <Plus size={10} aria-hidden />
           </button>
@@ -662,18 +664,18 @@ export function FileTreePanel({
                   ? `${visibleEntries.length} modified`
                   : `${visibleEntries.length} file${visibleEntries.length === 1 ? "" : "s"}`
               : showLoading
-                ? "Loading files"
+                ? t("app.fileTree.loadingFiles")
                 : filterMode === "modified"
-                  ? "No modified"
-                  : "No files"}
+                  ? t("app.fileTree.noModified")
+                  : t("app.fileTree.noFiles")}
           </div>
           {hasFolders ? (
             <button
               type="button"
               className="ghost icon-button file-tree-toggle"
               onClick={toggleAllFolders}
-              aria-label={allVisibleExpanded ? "Collapse all folders" : "Expand all folders"}
-              title={allVisibleExpanded ? "Collapse all folders" : "Expand all folders"}
+              aria-label={allVisibleExpanded ? t("app.fileTree.collapseAllFolders") : t("app.fileTree.expandAllFolders")}
+              title={allVisibleExpanded ? t("app.fileTree.collapseAllFolders") : t("app.fileTree.expandAllFolders")}
             >
               <ChevronsUpDown aria-hidden />
             </button>
@@ -684,10 +686,10 @@ export function FileTreePanel({
         <PanelSearchField
           className="file-tree-search"
           inputClassName="file-tree-search-input"
-          placeholder="Filter files and folders"
+          placeholder={t("app.fileTree.filterFilesAndFolders")}
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          aria-label="Filter files and folders"
+          aria-label={t("app.fileTree.filterFilesAndFolders")}
           icon={<Search aria-hidden />}
           trailing={
             <button
@@ -698,9 +700,15 @@ export function FileTreePanel({
               }}
               aria-pressed={filterMode === "modified"}
               aria-label={
-                filterMode === "modified" ? "Show all files" : "Show modified files only"
+                filterMode === "modified"
+                  ? t("app.fileTree.showAllFiles")
+                  : t("app.fileTree.showModifiedFilesOnly")
               }
-              title={filterMode === "modified" ? "Show all files" : "Show modified files only"}
+              title={
+                filterMode === "modified"
+                  ? t("app.fileTree.showAllFiles")
+                  : t("app.fileTree.showModifiedFilesOnly")
+              }
             >
               <GitBranch size={14} aria-hidden />
             </button>
@@ -727,11 +735,11 @@ export function FileTreePanel({
           <div className="file-tree-empty">
             {normalizedQuery
               ? filterMode === "modified"
-                ? "No modified files match your filter."
-                : "No matches found."
+                ? t("app.fileTree.noModifiedFilesMatch")
+                : t("app.fileTree.noMatchesFound")
               : filterMode === "modified"
-                ? "No modified files."
-                : "No files available."}
+                ? t("app.fileTree.noModifiedFiles")
+                : t("app.fileTree.noFilesAvailable")}
           </div>
         ) : (
           <div

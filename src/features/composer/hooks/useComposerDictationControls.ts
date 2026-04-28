@@ -1,4 +1,5 @@
 import { useCallback } from "react";
+import { i18n } from "@/i18n/config";
 
 type DictationState = "idle" | "listening" | "processing";
 
@@ -30,19 +31,19 @@ export function useComposerDictationControls({
     (!allowOpenDictationSettings &&
       (isDictationProcessing ? !onCancelDictation : !dictationEnabled || !onToggleDictation));
   const micAriaLabel = allowOpenDictationSettings
-    ? "Open dictation settings"
+    ? i18n.t("composer.dictationControls.openSettings")
     : isDictationProcessing
-      ? "Cancel transcription"
+      ? i18n.t("composer.dictationControls.cancelTranscription")
       : isDictating
-        ? "Stop dictation"
-        : "Start dictation";
+        ? i18n.t("composer.dictationControls.stopDictation")
+        : i18n.t("composer.dictationControls.startDictation");
   const micTitle = allowOpenDictationSettings
-    ? "Dictation disabled. Open settings"
+    ? i18n.t("composer.dictationControls.dictationDisabledOpenSettings")
     : isDictationProcessing
-      ? "Cancel transcription"
+      ? i18n.t("composer.dictationControls.cancelTranscription")
       : isDictating
-        ? "Stop dictation"
-        : "Start dictation";
+        ? i18n.t("composer.dictationControls.stopDictation")
+        : i18n.t("composer.dictationControls.startDictation");
 
   const handleMicClick = useCallback(() => {
     if (isDictationProcessing) {

@@ -48,6 +48,7 @@ describe("useAppSettings", () => {
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
     expect(result.current.settings.uiScale).toBe(UI_SCALE_MAX);
+    expect(result.current.settings.uiLanguage).toBe("en");
     expect(result.current.settings.theme).toBe("system");
     expect(result.current.settings.uiFontFamily).toContain("system-ui");
     expect(result.current.settings.codeFontFamily).toContain("ui-monospace");
@@ -65,6 +66,7 @@ describe("useAppSettings", () => {
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
     expect(result.current.settings.uiScale).toBe(UI_SCALE_DEFAULT);
+    expect(result.current.settings.uiLanguage).toBe("en");
     expect(result.current.settings.theme).toBe("system");
     expect(result.current.settings.uiFontFamily).toContain("system-ui");
     expect(result.current.settings.codeFontFamily).toContain("ui-monospace");

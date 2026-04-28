@@ -1,10 +1,16 @@
 // @vitest-environment jsdom
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { AppSettings } from "@/types";
+import { AppI18nProvider } from "@/i18n/provider";
+import { i18n } from "@/i18n/config";
 import { SettingsDisplaySection } from "./SettingsDisplaySection";
 
 describe("SettingsDisplaySection", () => {
+  beforeEach(async () => {
+    await i18n.changeLanguage("en");
+  });
+
   afterEach(() => {
     cleanup();
   });
@@ -12,41 +18,44 @@ describe("SettingsDisplaySection", () => {
     const onUpdateAppSettings = vi.fn(async () => {});
 
     render(
-      <SettingsDisplaySection
-        appSettings={
-          ({
-            theme: "system",
-            usageShowRemaining: false,
-            showMessageFilePath: true,
-            threadTitleAutogenerationEnabled: false,
-            uiFontFamily: "",
-            codeFontFamily: "",
-            codeFontSize: 11,
-            notificationSoundsEnabled: true,
-            systemNotificationsEnabled: true,
-          } as unknown) as AppSettings
-        }
-        reduceTransparency={false}
-        scaleShortcutTitle=""
-        scaleShortcutText=""
-        scaleDraft="100%"
-        uiFontDraft=""
-        codeFontDraft=""
-        codeFontSizeDraft={11}
-        onUpdateAppSettings={onUpdateAppSettings}
-        onToggleTransparency={vi.fn()}
-        onSetScaleDraft={vi.fn() as any}
-        onCommitScale={vi.fn(async () => {})}
-        onResetScale={vi.fn(async () => {})}
-        onSetUiFontDraft={vi.fn() as any}
-        onCommitUiFont={vi.fn(async () => {})}
-        onSetCodeFontDraft={vi.fn() as any}
-        onCommitCodeFont={vi.fn(async () => {})}
-        onSetCodeFontSizeDraft={vi.fn() as any}
-        onCommitCodeFontSize={vi.fn(async () => {})}
-        onTestNotificationSound={vi.fn()}
-        onTestSystemNotification={vi.fn()}
-      />,
+      <AppI18nProvider>
+        <SettingsDisplaySection
+          appSettings={
+            ({
+              theme: "system",
+              uiLanguage: "en",
+              usageShowRemaining: false,
+              showMessageFilePath: true,
+              threadTitleAutogenerationEnabled: false,
+              uiFontFamily: "",
+              codeFontFamily: "",
+              codeFontSize: 11,
+              notificationSoundsEnabled: true,
+              systemNotificationsEnabled: true,
+            } as unknown) as AppSettings
+          }
+          reduceTransparency={false}
+          scaleShortcutTitle=""
+          scaleShortcutText=""
+          scaleDraft="100%"
+          uiFontDraft=""
+          codeFontDraft=""
+          codeFontSizeDraft={11}
+          onUpdateAppSettings={onUpdateAppSettings}
+          onToggleTransparency={vi.fn()}
+          onSetScaleDraft={vi.fn() as any}
+          onCommitScale={vi.fn(async () => {})}
+          onResetScale={vi.fn(async () => {})}
+          onSetUiFontDraft={vi.fn() as any}
+          onCommitUiFont={vi.fn(async () => {})}
+          onSetCodeFontDraft={vi.fn() as any}
+          onCommitCodeFont={vi.fn(async () => {})}
+          onSetCodeFontSizeDraft={vi.fn() as any}
+          onCommitCodeFontSize={vi.fn(async () => {})}
+          onTestNotificationSound={vi.fn()}
+          onTestSystemNotification={vi.fn()}
+        />
+      </AppI18nProvider>,
     );
 
     const row = screen
@@ -61,14 +70,69 @@ describe("SettingsDisplaySection", () => {
       expect.objectContaining({ threadTitleAutogenerationEnabled: true }),
     );
   });
+
+  it("updates ui language from the display section", () => {
+    const onUpdateAppSettings = vi.fn(async () => {});
+
+    render(
+      <AppI18nProvider>
+        <SettingsDisplaySection
+          appSettings={
+            ({
+              uiLanguage: "en",
+              theme: "system",
+              usageShowRemaining: false,
+              showMessageFilePath: true,
+              threadTitleAutogenerationEnabled: false,
+              uiFontFamily: "",
+              codeFontFamily: "",
+              codeFontSize: 11,
+              notificationSoundsEnabled: true,
+              systemNotificationsEnabled: true,
+            } as unknown) as AppSettings
+          }
+          reduceTransparency={false}
+          scaleShortcutTitle=""
+          scaleShortcutText=""
+          scaleDraft="100%"
+          uiFontDraft=""
+          codeFontDraft=""
+          codeFontSizeDraft={11}
+          onUpdateAppSettings={onUpdateAppSettings}
+          onToggleTransparency={vi.fn()}
+          onSetScaleDraft={vi.fn() as any}
+          onCommitScale={vi.fn(async () => {})}
+          onResetScale={vi.fn(async () => {})}
+          onSetUiFontDraft={vi.fn() as any}
+          onCommitUiFont={vi.fn(async () => {})}
+          onSetCodeFontDraft={vi.fn() as any}
+          onCommitCodeFont={vi.fn(async () => {})}
+          onSetCodeFontSizeDraft={vi.fn() as any}
+          onCommitCodeFontSize={vi.fn(async () => {})}
+          onTestNotificationSound={vi.fn()}
+          onTestSystemNotification={vi.fn()}
+        />
+      </AppI18nProvider>,
+    );
+
+    fireEvent.change(screen.getByLabelText("Language"), {
+      target: { value: "zh-CN" },
+    });
+
+    expect(onUpdateAppSettings).toHaveBeenCalledWith(
+      expect.objectContaining({ uiLanguage: "zh-CN" }),
+    );
+  });
   it("toggles unlimited chat history", () => {
     const onUpdateAppSettings = vi.fn(async () => {});
 
     render(
-      <SettingsDisplaySection
+      <AppI18nProvider>
+        <SettingsDisplaySection
         appSettings={
           ({
             theme: "system",
+            uiLanguage: "en",
             usageShowRemaining: false,
             showMessageFilePath: true,
             chatHistoryScrollbackItems: 200,
@@ -100,7 +164,8 @@ describe("SettingsDisplaySection", () => {
         onCommitCodeFontSize={vi.fn(async () => {})}
         onTestNotificationSound={vi.fn()}
         onTestSystemNotification={vi.fn()}
-      />,
+        />
+      </AppI18nProvider>,
     );
 
     const row = screen.getByText("Unlimited chat history").closest(".settings-toggle-row");
@@ -118,10 +183,12 @@ describe("SettingsDisplaySection", () => {
     const onUpdateAppSettings = vi.fn(async () => {});
 
     render(
-      <SettingsDisplaySection
+      <AppI18nProvider>
+        <SettingsDisplaySection
         appSettings={
           ({
             theme: "system",
+            uiLanguage: "en",
             usageShowRemaining: false,
             showMessageFilePath: true,
             chatHistoryScrollbackItems: null,
@@ -153,7 +220,8 @@ describe("SettingsDisplaySection", () => {
         onCommitCodeFontSize={vi.fn(async () => {})}
         onTestNotificationSound={vi.fn()}
         onTestSystemNotification={vi.fn()}
-      />,
+        />
+      </AppI18nProvider>,
     );
 
     const presetSelect = screen.getByLabelText("Scrollback preset");
@@ -177,10 +245,12 @@ describe("SettingsDisplaySection", () => {
     const onUpdateAppSettings = vi.fn(async () => {});
 
     render(
-      <SettingsDisplaySection
+      <AppI18nProvider>
+        <SettingsDisplaySection
         appSettings={
           ({
             theme: "system",
+            uiLanguage: "en",
             usageShowRemaining: false,
             showMessageFilePath: true,
             chatHistoryScrollbackItems: 200,
@@ -212,7 +282,8 @@ describe("SettingsDisplaySection", () => {
         onCommitCodeFontSize={vi.fn(async () => {})}
         onTestNotificationSound={vi.fn()}
         onTestSystemNotification={vi.fn()}
-      />,
+        />
+      </AppI18nProvider>,
     );
 
     const select = screen.getByLabelText("Scrollback preset");
@@ -227,10 +298,12 @@ describe("SettingsDisplaySection", () => {
     const onUpdateAppSettings = vi.fn(async () => {});
 
     render(
-      <SettingsDisplaySection
+      <AppI18nProvider>
+        <SettingsDisplaySection
         appSettings={
           ({
             theme: "system",
+            uiLanguage: "en",
             usageShowRemaining: false,
             showMessageFilePath: true,
             chatHistoryScrollbackItems: 200,
@@ -262,7 +335,8 @@ describe("SettingsDisplaySection", () => {
         onCommitCodeFontSize={vi.fn(async () => {})}
         onTestNotificationSound={vi.fn()}
         onTestSystemNotification={vi.fn()}
-      />,
+        />
+      </AppI18nProvider>,
     );
 
     const maxItemsInput = screen.getByLabelText("Max items per thread");
@@ -287,10 +361,12 @@ describe("SettingsDisplaySection", () => {
     const onUpdateAppSettings = vi.fn(async () => {});
 
     render(
-      <SettingsDisplaySection
+      <AppI18nProvider>
+        <SettingsDisplaySection
         appSettings={
           ({
             theme: "system",
+            uiLanguage: "en",
             usageShowRemaining: false,
             showMessageFilePath: true,
             chatHistoryScrollbackItems: 200,
@@ -322,7 +398,8 @@ describe("SettingsDisplaySection", () => {
         onCommitCodeFontSize={vi.fn(async () => {})}
         onTestNotificationSound={vi.fn()}
         onTestSystemNotification={vi.fn()}
-      />,
+        />
+      </AppI18nProvider>,
     );
 
     const maxItemsInput = screen.getByLabelText("Max items per thread");

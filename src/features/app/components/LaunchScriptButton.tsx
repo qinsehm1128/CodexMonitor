@@ -4,6 +4,7 @@ import { PopoverSurface } from "../../design-system/components/popover/PopoverPr
 import { useMenuController } from "../hooks/useMenuController";
 import { LaunchScriptIconPicker } from "./LaunchScriptIconPicker";
 import { DEFAULT_LAUNCH_SCRIPT_ICON } from "../utils/launchScriptIcons";
+import { useT } from "@/i18n/useT";
 
 type LaunchScriptButtonProps = {
   launchScript: string | null;
@@ -54,6 +55,7 @@ export function LaunchScriptButton({
   onNewDraftLabelChange,
   onCreateNew,
 }: LaunchScriptButtonProps) {
+  const { t } = useT();
   const editorMenu = useMenuController({
     open: editorOpen,
     onDismiss: () => {
@@ -76,9 +78,9 @@ export function LaunchScriptButton({
             onOpenEditor();
           }}
           data-tauri-drag-region="false"
-          aria-label={hasLaunchScript ? "Run launch script" : "Set launch script"}
-          title={hasLaunchScript ? "Run launch script" : "Set launch script"}
-          data-tooltip={hasLaunchScript ? "Run launch script" : "Set launch script"}
+          aria-label={hasLaunchScript ? t("app.launchScripts.runLaunchScript") : t("app.launchScripts.setLaunchScript")}
+          title={hasLaunchScript ? t("app.launchScripts.runLaunchScript") : t("app.launchScripts.setLaunchScript")}
+          data-tooltip={hasLaunchScript ? t("app.launchScripts.runLaunchScript") : t("app.launchScripts.setLaunchScript")}
           data-tooltip-placement="bottom"
         >
           <Play size={14} aria-hidden />
@@ -86,10 +88,10 @@ export function LaunchScriptButton({
       </div>
       {editorOpen && (
         <PopoverSurface className="launch-script-popover" role="dialog">
-          <div className="launch-script-title">Launch script</div>
+          <div className="launch-script-title">{t("app.launchScripts.launchScript")}</div>
           <textarea
             className="launch-script-textarea"
-            placeholder="e.g. npm run dev"
+            placeholder={t("app.launchScripts.placeholderScript")}
             value={draftScript}
             onChange={(event) => onDraftChange(event.target.value)}
             rows={6}
@@ -106,7 +108,7 @@ export function LaunchScriptButton({
               }}
               data-tauri-drag-region="false"
             >
-              Cancel
+              {t("app.launchScripts.cancel")}
             </button>
             {showNew && onOpenNew && (
               <button
@@ -115,7 +117,7 @@ export function LaunchScriptButton({
                 onClick={onOpenNew}
                 data-tauri-drag-region="false"
               >
-                New
+                {t("app.launchScripts.new")}
               </button>
             )}
             <button
@@ -125,12 +127,12 @@ export function LaunchScriptButton({
               disabled={isSaving}
               data-tauri-drag-region="false"
             >
-              {isSaving ? "Saving..." : "Save"}
+              {isSaving ? t("app.launchScripts.saving") : t("app.launchScripts.save")}
             </button>
           </div>
           {showNew && newEditorOpen && onNewDraftChange && onNewDraftIconChange && onCreateNew && (
             <div className="launch-script-new">
-              <div className="launch-script-title">New launch script</div>
+              <div className="launch-script-title">{t("app.launchScripts.newLaunchScript")}</div>
               <LaunchScriptIconPicker
                 value={newDraftIcon}
                 onChange={onNewDraftIconChange}
@@ -138,14 +140,14 @@ export function LaunchScriptButton({
               <input
                 className="launch-script-input"
                 type="text"
-                placeholder="Optional label"
+                placeholder={t("app.launchScripts.optionalLabel")}
                 value={newDraftLabel}
                 onChange={(event) => onNewDraftLabelChange?.(event.target.value)}
                 data-tauri-drag-region="false"
               />
               <textarea
                 className="launch-script-textarea"
-                placeholder="e.g. npm run dev"
+                placeholder={t("app.launchScripts.placeholderScript")}
                 value={newDraftScript}
                 onChange={(event) => onNewDraftChange(event.target.value)}
                 rows={5}
@@ -159,7 +161,7 @@ export function LaunchScriptButton({
                   onClick={onCloseNew}
                   data-tauri-drag-region="false"
                 >
-                  Cancel
+                  {t("app.launchScripts.cancel")}
                 </button>
                 <button
                   type="button"
@@ -168,7 +170,7 @@ export function LaunchScriptButton({
                   disabled={isSaving}
                   data-tauri-drag-region="false"
                 >
-                  {isSaving ? "Saving..." : "Create"}
+                  {isSaving ? t("app.launchScripts.saving") : t("app.launchScripts.create")}
                 </button>
               </div>
             </div>

@@ -1,6 +1,6 @@
 import type { LaunchScriptIconId } from "../utils/launchScriptIcons";
 import {
-  LAUNCH_SCRIPT_ICON_OPTIONS,
+  getLaunchScriptIconOptions,
   getLaunchScriptIcon,
 } from "../utils/launchScriptIcons";
 
@@ -10,9 +10,10 @@ type LaunchScriptIconPickerProps = {
 };
 
 export function LaunchScriptIconPicker({ value, onChange }: LaunchScriptIconPickerProps) {
+  const options = getLaunchScriptIconOptions();
   return (
     <div className="launch-script-icon-picker">
-      {LAUNCH_SCRIPT_ICON_OPTIONS.map((option) => {
+      {options.map((option) => {
         const Icon = getLaunchScriptIcon(option.id);
         const selected = option.id === value;
         return (

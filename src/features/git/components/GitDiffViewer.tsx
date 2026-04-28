@@ -23,6 +23,7 @@ import type {
   GitDiffViewerProps,
 } from "./GitDiffViewer.types";
 import { calculateDiffStats } from "./GitDiffViewer.utils";
+import { i18n } from "@/i18n/config";
 
 function isSelectableLine(
   line: ParsedDiffLine,
@@ -321,7 +322,7 @@ export function GitDiffViewer({
       }
       const confirmed = await ask(
         `Discard changes in:\n\n${path}\n\nThis cannot be undone.`,
-        { title: "Discard changes", kind: "warning" },
+        { title: i18n.t("git.panel.discardTitle"), kind: "warning" },
       );
       if (!confirmed) {
         return;
@@ -453,15 +454,14 @@ export function GitDiffViewer({
 
   const emptyStateCopy = pullRequest
     ? {
-        title: "No file changes in this pull request",
-        subtitle:
-          "The pull request loaded, but there are no diff hunks to render for this selection.",
-        hint: "Try switching to another pull request or commit from the Git panel.",
+        title: i18n.t("app.gitViewer.noFileChangesTitle"),
+        subtitle: i18n.t("app.gitViewer.noFileChangesSubtitle"),
+        hint: i18n.t("app.gitViewer.noFileChangesHint"),
       }
     : {
-        title: "Working tree is clean",
-        subtitle: "No local changes were detected for the current workspace.",
-        hint: "Make an edit, stage a file, or select a commit to inspect changes here.",
+        title: i18n.t("app.gitViewer.workingTreeCleanTitle"),
+        subtitle: i18n.t("app.gitViewer.workingTreeCleanSubtitle"),
+        hint: i18n.t("app.gitViewer.workingTreeCleanHint"),
       };
 
   return (
@@ -511,8 +511,8 @@ export function GitDiffViewer({
                 <button
                   type="button"
                   className="diff-viewer-header-action diff-viewer-header-action--discard"
-                  title="Discard changes in this file"
-                  aria-label="Discard changes in this file"
+                  title={i18n.t("app.gitViewer.discardChangesInFile")}
+                  aria-label={i18n.t("app.gitViewer.discardChangesInFile")}
                   onClick={(event) => {
                     event.preventDefault();
                     event.stopPropagation();
@@ -530,7 +530,7 @@ export function GitDiffViewer({
         {error && <div className="diff-viewer-empty">{error}</div>}
         {!error && isLoading && diffs.length > 0 && (
           <div className="diff-viewer-loading diff-viewer-loading-overlay">
-            Refreshing diff...
+            {i18n.t("app.gitViewer.refreshingDiff")}
           </div>
         )}
         {!error && !isLoading && !diffs.length && (

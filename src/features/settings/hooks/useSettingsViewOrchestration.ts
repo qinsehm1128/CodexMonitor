@@ -21,9 +21,10 @@ import { useSettingsServerSection } from "./useSettingsServerSection";
 import type { GroupedWorkspaces } from "./settingsSectionTypes";
 import {
   COMPOSER_PRESET_CONFIGS,
-  COMPOSER_PRESET_LABELS,
-  DICTATION_MODELS,
+  getComposerPresetLabels,
+  getDictationModels,
 } from "@settings/components/settingsViewConstants";
+import { useT } from "@/i18n/useT";
 
 type UseSettingsViewOrchestrationArgs = {
   workspaceGroups: WorkspaceGroup[];
@@ -98,6 +99,7 @@ export function useSettingsViewOrchestration({
   onCancelDictationDownload,
   onRemoveDictationModel,
 }: UseSettingsViewOrchestrationArgs) {
+  const { i18n } = useT();
   const projects = useMemo(
     () => groupedWorkspaces.flatMap((group) => group.workspaces),
     [groupedWorkspaces],
@@ -120,14 +122,16 @@ export function useSettingsViewOrchestration({
   const followUpShortcutLabel = isMacPlatform()
     ? "Shift+Cmd+Enter"
     : "Shift+Ctrl+Enter";
+  const dictationModels = useMemo(() => getDictationModels(), [i18n.language]);
+  const composerPresetLabels = useMemo(() => getComposerPresetLabels(), [i18n.language]);
 
   const selectedDictationModel = useMemo(() => {
     return (
-      DICTATION_MODELS.find(
+      dictationModels.find(
         (model) => model.id === appSettings.dictationModelId,
-      ) ?? DICTATION_MODELS[1]
+      ) ?? dictationModels[1]
     );
-  }, [appSettings.dictationModelId]);
+  }, [appSettings.dictationModelId, dictationModels]);
 
   const dictationReady = dictationModelStatus?.state === "ready";
 
@@ -226,7 +230,7 @@ export function useSettingsViewOrchestration({
       appSettings,
       optionKeyLabel,
       followUpShortcutLabel,
-      composerPresetLabels: COMPOSER_PRESET_LABELS,
+      composerPresetLabels,
       onComposerPresetChange: (
         preset: AppSettings["composerEditorPreset"],
       ) => {
@@ -243,7 +247,7 @@ export function useSettingsViewOrchestration({
       appSettings,
       optionKeyLabel,
       metaKeyLabel,
-      dictationModels: DICTATION_MODELS,
+      dictationModels,
       selectedDictationModel,
       dictationModelStatus,
       dictationReady,

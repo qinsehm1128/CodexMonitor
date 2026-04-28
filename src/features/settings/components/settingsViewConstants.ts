@@ -1,16 +1,37 @@
 import type { AppSettings } from "@/types";
 import type { CodexSection, ShortcutDraftKey, ShortcutSettingKey } from "./settingsTypes";
+import { i18n } from "@/i18n/config";
 
-export const DICTATION_MODELS = [
-  { id: "tiny", label: "Tiny", size: "75 MB", note: "Fastest, least accurate." },
-  { id: "base", label: "Base", size: "142 MB", note: "Balanced default." },
-  { id: "small", label: "Small", size: "466 MB", note: "Better accuracy." },
-  { id: "medium", label: "Medium", size: "1.5 GB", note: "High accuracy." },
+export const getDictationModels = () => [
+  {
+    id: "tiny",
+    label: i18n.t("settings.dictation.models.tiny.label"),
+    size: "75 MB",
+    note: i18n.t("settings.dictation.models.tiny.note"),
+  },
+  {
+    id: "base",
+    label: i18n.t("settings.dictation.models.base.label"),
+    size: "142 MB",
+    note: i18n.t("settings.dictation.models.base.note"),
+  },
+  {
+    id: "small",
+    label: i18n.t("settings.dictation.models.small.label"),
+    size: "466 MB",
+    note: i18n.t("settings.dictation.models.small.note"),
+  },
+  {
+    id: "medium",
+    label: i18n.t("settings.dictation.models.medium.label"),
+    size: "1.5 GB",
+    note: i18n.t("settings.dictation.models.medium.note"),
+  },
   {
     id: "large-v3",
-    label: "Large V3",
+    label: i18n.t("settings.dictation.models.large-v3.label"),
     size: "3.0 GB",
-    note: "Best accuracy, heavy download.",
+    note: i18n.t("settings.dictation.models.large-v3.note"),
   },
 ];
 
@@ -28,11 +49,11 @@ type ComposerPresetSettings = Pick<
   | "composerCodeBlockCopyUseModifier"
 >;
 
-export const COMPOSER_PRESET_LABELS: Record<ComposerPreset, string> = {
-  default: "Default (no helpers)",
-  helpful: "Helpful",
-  smart: "Smart",
-};
+export const getComposerPresetLabels = (): Record<ComposerPreset, string> => ({
+  default: i18n.t("settings.composer.presetLabels.default"),
+  helpful: i18n.t("settings.composer.presetLabels.helpful"),
+  smart: i18n.t("settings.composer.presetLabels.smart"),
+});
 
 export const COMPOSER_PRESET_CONFIGS: Record<
   ComposerPreset,

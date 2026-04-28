@@ -13,6 +13,7 @@ import {
   coerceLaunchScriptIconId,
   getLaunchScriptIconLabel,
 } from "../utils/launchScriptIcons";
+import { i18n } from "@/i18n/config";
 
 type PendingLaunch = {
   workspaceId: string;
@@ -64,9 +65,11 @@ export type WorkspaceLaunchScriptsState = {
 function buildLaunchTitle(entry: LaunchScriptEntry) {
   const label = entry.label?.trim();
   if (label) {
-    return `Launch: ${label}`;
+    return i18n.t("app.launchScripts.launchPrefix", { label });
   }
-  return `Launch: ${getLaunchScriptIconLabel(entry.icon)}`;
+  return i18n.t("app.launchScripts.launchPrefix", {
+    label: getLaunchScriptIconLabel(entry.icon),
+  });
 }
 
 export function useWorkspaceLaunchScripts({
@@ -180,7 +183,7 @@ export function useWorkspaceLaunchScripts({
     }
     const trimmed = newDraftScript.trim();
     if (!trimmed) {
-      setNewError("Script cannot be empty.");
+      setNewError(i18n.t("app.launchScripts.scriptEmpty"));
       return;
     }
     setIsSaving(true);
@@ -220,8 +223,9 @@ export function useWorkspaceLaunchScripts({
     }
     const trimmed = draftScript.trim();
     if (!trimmed) {
-      setError("Script cannot be empty.");
-      setErrorById((prev) => ({ ...prev, [editorOpenId]: "Script cannot be empty." }));
+      const message = i18n.t("app.launchScripts.scriptEmpty");
+      setError(message);
+      setErrorById((prev) => ({ ...prev, [editorOpenId]: message }));
       return;
     }
     setIsSaving(true);
@@ -344,7 +348,7 @@ export function useWorkspaceLaunchScripts({
         setError(message);
         setErrorById((prev) => ({ ...prev, [pending.entryId]: message }));
         pushErrorToast({
-          title: "Launch script error",
+          title: i18n.t("app.launchScripts.errorTitle"),
           message,
         });
       },

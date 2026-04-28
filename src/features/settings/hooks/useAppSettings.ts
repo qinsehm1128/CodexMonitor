@@ -19,6 +19,7 @@ import { normalizeOpenAppTargets } from "@app/utils/openApp";
 import { getDefaultInterruptShortcut, isMacPlatform } from "@utils/shortcuts";
 import { isMobilePlatform } from "@utils/platformPaths";
 import { DEFAULT_COMMIT_MESSAGE_PROMPT } from "@utils/commitMessagePrompt";
+import { UI_LANGUAGE_DEFAULT, normalizeUiLanguage } from "@/i18n/constants";
 
 const allowedThemes = new Set(["system", "light", "dark", "dim"]);
 const allowedPersonality = new Set(["friendly", "pragmatic"]);
@@ -166,6 +167,7 @@ function buildDefaultSettings(): AppSettings {
     lastComposerModelId: null,
     lastComposerReasoningEffort: null,
     uiScale: UI_SCALE_DEFAULT,
+    uiLanguage: UI_LANGUAGE_DEFAULT,
     theme: "system",
     usageShowRemaining: false,
     showMessageFilePath: true,
@@ -246,6 +248,7 @@ function normalizeAppSettings(settings: AppSettings): AppSettings {
     codexBin: settings.codexBin?.trim() ? settings.codexBin.trim() : null,
     codexArgs: settings.codexArgs?.trim() ? settings.codexArgs.trim() : null,
     uiScale: clampUiScale(settings.uiScale),
+    uiLanguage: normalizeUiLanguage(settings.uiLanguage),
     theme: allowedThemes.has(settings.theme) ? settings.theme : "system",
     uiFontFamily: normalizeFontFamily(
       settings.uiFontFamily,

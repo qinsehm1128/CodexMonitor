@@ -80,6 +80,7 @@ import {
 import { useAppShellOrchestration } from "@app/orchestration/useLayoutOrchestration";
 import { normalizeCodexArgsInput } from "@/utils/codexArgsInput";
 import { subscribeTrayOpenThread } from "@services/events";
+import { useSyncUiLanguage } from "@/i18n/useSyncUiLanguage";
 
 const SettingsView = lazy(() =>
   import("@settings/components/SettingsView").then((module) => ({
@@ -120,6 +121,10 @@ export default function MainApp() {
     clearDebugEntries,
     shouldReduceTransparency,
   } = useAppBootstrapOrchestration();
+  const uiLanguageReady = useSyncUiLanguage(
+    appSettings.uiLanguage,
+    appSettingsLoading,
+  );
   const {
     threadListSortKey,
     setThreadListSortKey,
@@ -1876,6 +1881,10 @@ export default function MainApp() {
       remoteThreadConnectionState: compactThreadConnectionState,
     },
   });
+
+  if (!uiLanguageReady) {
+    return null;
+  }
 
   return <MainAppShell {...mainAppShellProps} />;
 }

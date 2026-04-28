@@ -7,6 +7,7 @@ import { ThreadList } from "./ThreadList";
 import { ThreadLoading } from "./ThreadLoading";
 import { WorktreeCard } from "./WorktreeCard";
 import { getVisibleThreadListState } from "./threadSearchUtils";
+import { useT } from "@/i18n/useT";
 
 type ThreadRowsResult = {
   pinnedRows: Array<{ thread: ThreadSummary; depth: number }>;
@@ -91,9 +92,17 @@ export function WorktreeSection({
   sectionIcon,
   className,
 }: WorktreeSectionProps) {
+  const { t } = useT();
   if (!worktrees.length) {
     return null;
   }
+
+  const resolvedSectionLabel =
+    sectionLabel === "Clone agents"
+      ? t("app.sidebar.worktreeSection.cloneAgents")
+      : sectionLabel === "Worktrees"
+        ? t("app.sidebar.worktreeSection.worktrees")
+        : sectionLabel;
 
   return (
     <div className={`worktree-section${className ? ` ${className}` : ""}`}>
@@ -102,7 +111,7 @@ export function WorktreeSection({
           <span className="worktree-header-icon-wrap">
             {sectionIcon ?? <Layers className="worktree-header-icon" aria-hidden />}
           </span>
-          <span>{sectionLabel}</span>
+          <span>{resolvedSectionLabel}</span>
         </span>
         <span className="worktree-header-count">{worktrees.length}</span>
       </div>

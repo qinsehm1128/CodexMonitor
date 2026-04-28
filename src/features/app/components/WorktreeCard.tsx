@@ -1,6 +1,7 @@
 import type { MouseEvent } from "react";
 
 import type { WorkspaceInfo } from "../../../types";
+import { useT } from "@/i18n/useT";
 
 type WorktreeCardProps = {
   worktree: WorkspaceInfo;
@@ -23,6 +24,7 @@ export function WorktreeCard({
   onConnectWorkspace,
   children,
 }: WorktreeCardProps) {
+  const { t } = useT();
   const worktreeCollapsed = worktree.settings.sidebarCollapsed;
   const worktreeBranch = worktree.worktree?.branch ?? "";
   const worktreeLabel = worktree.name?.trim() || worktreeBranch;
@@ -65,7 +67,9 @@ export function WorktreeCard({
           {isDeleting ? (
             <div className="worktree-deleting" role="status" aria-live="polite">
               <span className="worktree-deleting-spinner" aria-hidden />
-              <span className="worktree-deleting-label">Deleting</span>
+              <span className="worktree-deleting-label">
+                {t("app.sidebar.worktreeCard.deleting")}
+              </span>
             </div>
           ) : (
             <>
@@ -76,7 +80,11 @@ export function WorktreeCard({
                   onToggleWorkspaceCollapse(worktree.id, !worktreeCollapsed);
                 }}
                 data-tauri-drag-region="false"
-                aria-label={worktreeCollapsed ? "Show agents" : "Hide agents"}
+                aria-label={
+                  worktreeCollapsed
+                    ? t("app.sidebar.workspaceCard.showAgents")
+                    : t("app.sidebar.workspaceCard.hideAgents")
+                }
                 aria-expanded={!worktreeCollapsed}
               >
                 <span className="worktree-toggle-icon">›</span>
@@ -84,13 +92,13 @@ export function WorktreeCard({
               {!worktree.connected && (
                 <span
                   className="connect"
-                  title="Connect workspace context to the shared Codex server"
+                  title={t("app.sidebar.workspaceCard.connectWorkspace")}
                   onClick={(event) => {
                     event.stopPropagation();
                     onConnectWorkspace(worktree);
                   }}
                 >
-                  connect
+                  {t("app.sidebar.workspaceCard.connect")}
                 </span>
               )}
             </>

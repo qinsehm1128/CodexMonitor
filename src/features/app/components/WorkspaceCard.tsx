@@ -1,6 +1,7 @@
 import type { MouseEvent } from "react";
 
 import type { WorkspaceInfo } from "../../../types";
+import { useT } from "@/i18n/useT";
 
 type WorkspaceCardProps = {
   workspace: WorkspaceInfo;
@@ -38,6 +39,7 @@ export function WorkspaceCard({
   onToggleAddMenu,
   children,
 }: WorkspaceCardProps) {
+  const { t } = useT();
   const contentCollapsedClass = isCollapsed ? " collapsed" : "";
 
   return (
@@ -63,13 +65,17 @@ export function WorkspaceCard({
                 className={`workspace-toggle ${isCollapsed ? "" : "expanded"}`}
                 onClick={(event) => {
                   event.stopPropagation();
-                  onToggleWorkspaceCollapse(workspace.id, !isCollapsed);
-                }}
-                data-tauri-drag-region="false"
-                aria-label={isCollapsed ? "Show agents" : "Hide agents"}
-                aria-expanded={!isCollapsed}
-              >
-                <span className="workspace-toggle-icon">›</span>
+                onToggleWorkspaceCollapse(workspace.id, !isCollapsed);
+              }}
+              data-tauri-drag-region="false"
+              aria-label={
+                isCollapsed
+                  ? t("app.sidebar.workspaceCard.showAgents")
+                  : t("app.sidebar.workspaceCard.hideAgents")
+              }
+              aria-expanded={!isCollapsed}
+            >
+              <span className="workspace-toggle-icon">›</span>
               </button>
             </div>
           </div>
@@ -98,7 +104,7 @@ export function WorkspaceCard({
               );
             }}
             data-tauri-drag-region="false"
-            aria-label="Add agent options"
+            aria-label={t("app.sidebar.workspaceCard.addAgentOptions")}
             aria-expanded={addMenuOpen}
           >
             +
@@ -106,13 +112,13 @@ export function WorkspaceCard({
           {!workspace.connected && (
             <span
               className="connect"
-              title="Connect workspace context to the shared Codex server"
+              title={t("app.sidebar.workspaceCard.connectWorkspace")}
               onClick={(event) => {
                 event.stopPropagation();
                 onConnectWorkspace(workspace);
               }}
             >
-              connect
+              {t("app.sidebar.workspaceCard.connect")}
             </span>
           )}
         </div>

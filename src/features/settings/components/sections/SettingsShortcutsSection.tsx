@@ -5,6 +5,7 @@ import {
 } from "@/features/design-system/components/settings/SettingsPrimitives";
 import { formatShortcut, getDefaultInterruptShortcut } from "@utils/shortcuts";
 import { isMacPlatform } from "@utils/platformPaths";
+import { useT } from "@/i18n/useT";
 import type {
   ShortcutDraftKey,
   ShortcutDrafts,
@@ -47,6 +48,7 @@ function ShortcutField({
   ) => void;
   onClearShortcut: (key: ShortcutSettingKey) => void;
 }) {
+  const { t } = useT();
   return (
     <div className="settings-field">
       <div className="settings-field-label">{item.label}</div>
@@ -55,7 +57,7 @@ function ShortcutField({
           className="settings-input settings-input--shortcut"
           value={formatShortcut(shortcutDrafts[item.draftKey])}
           onKeyDown={(event) => onShortcutKeyDown(event, item.settingKey)}
-          placeholder="Type shortcut"
+          placeholder={t("settings.shortcuts.typeShortcut")}
           readOnly
         />
         <button
@@ -63,7 +65,7 @@ function ShortcutField({
           className="ghost settings-button-compact"
           onClick={() => onClearShortcut(item.settingKey)}
         >
-          Clear
+          {t("settings.shortcuts.clear")}
         </button>
       </div>
       <div className="settings-help">{item.help}</div>
@@ -76,145 +78,182 @@ export function SettingsShortcutsSection({
   onShortcutKeyDown,
   onClearShortcut,
 }: SettingsShortcutsSectionProps) {
+  const { t } = useT();
   const isMac = isMacPlatform();
   const [searchQuery, setSearchQuery] = useState("");
 
   const groups = useMemo<ShortcutGroup[]>(
     () => [
       {
-        title: "File",
-        subtitle: "Create agents and worktrees from the keyboard.",
+        title: t("settings.shortcuts.groups.file.title"),
+        subtitle: t("settings.shortcuts.groups.file.subtitle"),
         items: [
           {
-            label: "New Agent",
+            label: t("settings.shortcuts.labels.newAgent"),
             draftKey: "newAgent",
             settingKey: "newAgentShortcut",
-            help: `Default: ${formatShortcut("cmd+n")}`,
+            help: t("settings.shortcuts.help.default", {
+              shortcut: formatShortcut("cmd+n"),
+            }),
           },
           {
-            label: "New Worktree Agent",
+            label: t("settings.shortcuts.labels.newWorktreeAgent"),
             draftKey: "newWorktreeAgent",
             settingKey: "newWorktreeAgentShortcut",
-            help: `Default: ${formatShortcut("cmd+shift+n")}`,
+            help: t("settings.shortcuts.help.default", {
+              shortcut: formatShortcut("cmd+shift+n"),
+            }),
           },
           {
-            label: "New Clone Agent",
+            label: t("settings.shortcuts.labels.newCloneAgent"),
             draftKey: "newCloneAgent",
             settingKey: "newCloneAgentShortcut",
-            help: `Default: ${formatShortcut("cmd+alt+n")}`,
+            help: t("settings.shortcuts.help.default", {
+              shortcut: formatShortcut("cmd+alt+n"),
+            }),
           },
           {
-            label: "Archive active thread",
+            label: t("settings.shortcuts.labels.archiveThread"),
             draftKey: "archiveThread",
             settingKey: "archiveThreadShortcut",
-            help: `Default: ${formatShortcut(isMac ? "cmd+ctrl+a" : "ctrl+alt+a")}`,
+            help: t("settings.shortcuts.help.default", {
+              shortcut: formatShortcut(isMac ? "cmd+ctrl+a" : "ctrl+alt+a"),
+            }),
           },
         ],
       },
       {
-        title: "Composer",
-        subtitle: "Cycle between model, access, reasoning, and collaboration modes.",
+        title: t("settings.shortcuts.groups.composer.title"),
+        subtitle: t("settings.shortcuts.groups.composer.subtitle"),
         items: [
           {
-            label: "Cycle model",
+            label: t("settings.shortcuts.labels.cycleModel"),
             draftKey: "model",
             settingKey: "composerModelShortcut",
-            help: `Press a new shortcut while focused. Default: ${formatShortcut("cmd+shift+m")}`,
+            help: t("settings.shortcuts.help.cycleModel", {
+              shortcut: formatShortcut("cmd+shift+m"),
+            }),
           },
           {
-            label: "Cycle access mode",
+            label: t("settings.shortcuts.labels.cycleAccess"),
             draftKey: "access",
             settingKey: "composerAccessShortcut",
-            help: `Default: ${formatShortcut("cmd+shift+a")}`,
+            help: t("settings.shortcuts.help.default", {
+              shortcut: formatShortcut("cmd+shift+a"),
+            }),
           },
           {
-            label: "Cycle reasoning mode",
+            label: t("settings.shortcuts.labels.cycleReasoning"),
             draftKey: "reasoning",
             settingKey: "composerReasoningShortcut",
-            help: `Default: ${formatShortcut("cmd+shift+r")}`,
+            help: t("settings.shortcuts.help.default", {
+              shortcut: formatShortcut("cmd+shift+r"),
+            }),
           },
           {
-            label: "Cycle collaboration mode",
+            label: t("settings.shortcuts.labels.cycleCollaboration"),
             draftKey: "collaboration",
             settingKey: "composerCollaborationShortcut",
-            help: `Default: ${formatShortcut("shift+tab")}`,
+            help: t("settings.shortcuts.help.default", {
+              shortcut: formatShortcut("shift+tab"),
+            }),
           },
           {
-            label: "Stop active run",
+            label: t("settings.shortcuts.labels.interrupt"),
             draftKey: "interrupt",
             settingKey: "interruptShortcut",
-            help: `Default: ${formatShortcut(getDefaultInterruptShortcut())}`,
+            help: t("settings.shortcuts.help.default", {
+              shortcut: formatShortcut(getDefaultInterruptShortcut()),
+            }),
           },
         ],
       },
       {
-        title: "Panels",
-        subtitle: "Toggle sidebars and panels.",
+        title: t("settings.shortcuts.groups.panels.title"),
+        subtitle: t("settings.shortcuts.groups.panels.subtitle"),
         items: [
           {
-            label: "Toggle projects sidebar",
+            label: t("settings.shortcuts.labels.projectsSidebar"),
             draftKey: "projectsSidebar",
             settingKey: "toggleProjectsSidebarShortcut",
-            help: `Default: ${formatShortcut("cmd+shift+p")}`,
+            help: t("settings.shortcuts.help.default", {
+              shortcut: formatShortcut("cmd+shift+p"),
+            }),
           },
           {
-            label: "Toggle git sidebar",
+            label: t("settings.shortcuts.labels.gitSidebar"),
             draftKey: "gitSidebar",
             settingKey: "toggleGitSidebarShortcut",
-            help: `Default: ${formatShortcut("cmd+shift+g")}`,
+            help: t("settings.shortcuts.help.default", {
+              shortcut: formatShortcut("cmd+shift+g"),
+            }),
           },
           {
-            label: "Branch switcher",
+            label: t("settings.shortcuts.labels.branchSwitcher"),
             draftKey: "branchSwitcher",
             settingKey: "branchSwitcherShortcut",
-            help: `Default: ${formatShortcut("cmd+b")}`,
+            help: t("settings.shortcuts.help.default", {
+              shortcut: formatShortcut("cmd+b"),
+            }),
           },
           {
-            label: "Toggle debug panel",
+            label: t("settings.shortcuts.labels.debugPanel"),
             draftKey: "debugPanel",
             settingKey: "toggleDebugPanelShortcut",
-            help: `Default: ${formatShortcut("cmd+shift+d")}`,
+            help: t("settings.shortcuts.help.default", {
+              shortcut: formatShortcut("cmd+shift+d"),
+            }),
           },
           {
-            label: "Toggle terminal panel",
+            label: t("settings.shortcuts.labels.terminal"),
             draftKey: "terminal",
             settingKey: "toggleTerminalShortcut",
-            help: `Default: ${formatShortcut("cmd+shift+t")}`,
+            help: t("settings.shortcuts.help.default", {
+              shortcut: formatShortcut("cmd+shift+t"),
+            }),
           },
         ],
       },
       {
-        title: "Navigation",
-        subtitle: "Cycle between agents and workspaces.",
+        title: t("settings.shortcuts.groups.navigation.title"),
+        subtitle: t("settings.shortcuts.groups.navigation.subtitle"),
         items: [
           {
-            label: "Next agent",
+            label: t("settings.shortcuts.labels.nextAgent"),
             draftKey: "cycleAgentNext",
             settingKey: "cycleAgentNextShortcut",
-            help: `Default: ${formatShortcut(isMac ? "cmd+ctrl+down" : "ctrl+alt+down")}`,
+            help: t("settings.shortcuts.help.default", {
+              shortcut: formatShortcut(isMac ? "cmd+ctrl+down" : "ctrl+alt+down"),
+            }),
           },
           {
-            label: "Previous agent",
+            label: t("settings.shortcuts.labels.previousAgent"),
             draftKey: "cycleAgentPrev",
             settingKey: "cycleAgentPrevShortcut",
-            help: `Default: ${formatShortcut(isMac ? "cmd+ctrl+up" : "ctrl+alt+up")}`,
+            help: t("settings.shortcuts.help.default", {
+              shortcut: formatShortcut(isMac ? "cmd+ctrl+up" : "ctrl+alt+up"),
+            }),
           },
           {
-            label: "Next workspace",
+            label: t("settings.shortcuts.labels.nextWorkspace"),
             draftKey: "cycleWorkspaceNext",
             settingKey: "cycleWorkspaceNextShortcut",
-            help: `Default: ${formatShortcut(isMac ? "cmd+shift+down" : "ctrl+alt+shift+down")}`,
+            help: t("settings.shortcuts.help.default", {
+              shortcut: formatShortcut(isMac ? "cmd+shift+down" : "ctrl+alt+shift+down"),
+            }),
           },
           {
-            label: "Previous workspace",
+            label: t("settings.shortcuts.labels.previousWorkspace"),
             draftKey: "cycleWorkspacePrev",
             settingKey: "cycleWorkspacePrevShortcut",
-            help: `Default: ${formatShortcut(isMac ? "cmd+shift+up" : "ctrl+alt+shift+up")}`,
+            help: t("settings.shortcuts.help.default", {
+              shortcut: formatShortcut(isMac ? "cmd+shift+up" : "ctrl+alt+shift+up"),
+            }),
           },
         ],
       },
     ],
-    [isMac],
+    [isMac, t],
   );
 
   const normalizedSearchQuery = searchQuery.trim().toLowerCase();
@@ -235,18 +274,18 @@ export function SettingsShortcutsSection({
 
   return (
     <SettingsSection
-      title="Shortcuts"
-      subtitle="Customize keyboard shortcuts for file actions, composer, panels, and navigation."
+      title={t("settings.shortcuts.title")}
+      subtitle={t("settings.shortcuts.subtitle")}
     >
       <div className="settings-field settings-shortcuts-search">
         <label className="settings-field-label" htmlFor="settings-shortcuts-search">
-          Search shortcuts
+          {t("settings.shortcuts.searchLabel")}
         </label>
         <div className="settings-field-row">
           <input
             id="settings-shortcuts-search"
             className="settings-input"
-            placeholder="Search shortcuts"
+            placeholder={t("settings.shortcuts.searchPlaceholder")}
             value={searchQuery}
             onChange={(event) => setSearchQuery(event.target.value)}
           />
@@ -256,11 +295,11 @@ export function SettingsShortcutsSection({
               className="ghost settings-button-compact"
               onClick={() => setSearchQuery("")}
             >
-              Clear
+              {t("settings.shortcuts.clear")}
             </button>
           )}
         </div>
-        <div className="settings-help">Filter by section name, action, or default shortcut.</div>
+        <div className="settings-help">{t("settings.shortcuts.searchHelp")}</div>
       </div>
       {filteredGroups.map((group, index) => (
         <div key={group.title}>
@@ -279,7 +318,9 @@ export function SettingsShortcutsSection({
       ))}
       {filteredGroups.length === 0 && (
         <div className="settings-empty">
-          No shortcuts match {normalizedSearchQuery ? `"${searchQuery.trim()}"` : "your search"}.
+          {normalizedSearchQuery
+            ? t("settings.shortcuts.noResults", { query: searchQuery.trim() })
+            : t("settings.shortcuts.noResultsFallback")}
         </div>
       )}
     </SettingsSection>

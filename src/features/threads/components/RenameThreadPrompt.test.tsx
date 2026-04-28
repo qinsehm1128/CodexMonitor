@@ -1,20 +1,28 @@
 // @vitest-environment jsdom
 import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { AppI18nProvider } from "@/i18n/provider";
+import { i18n } from "@/i18n/config";
 import { RenameThreadPrompt } from "./RenameThreadPrompt";
+
+beforeEach(async () => {
+  await i18n.changeLanguage("en");
+});
 
 describe("RenameThreadPrompt", () => {
   it("handles backdrop and keyboard actions", () => {
     const onCancel = vi.fn();
     const onConfirm = vi.fn();
     const { container } = render(
-      <RenameThreadPrompt
-        currentName="Old name"
-        name="New name"
-        onChange={vi.fn()}
-        onCancel={onCancel}
-        onConfirm={onConfirm}
-      />,
+      <AppI18nProvider>
+        <RenameThreadPrompt
+          currentName="Old name"
+          name="New name"
+          onChange={vi.fn()}
+          onCancel={onCancel}
+          onConfirm={onConfirm}
+        />
+      </AppI18nProvider>,
     );
 
     const input = screen.getByLabelText("New name");

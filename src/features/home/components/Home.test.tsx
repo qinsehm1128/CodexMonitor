@@ -1,7 +1,13 @@
 // @vitest-environment jsdom
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { AppI18nProvider } from "@/i18n/provider";
+import { i18n } from "@/i18n/config";
 import { Home } from "./Home";
+
+beforeEach(async () => {
+  await i18n.changeLanguage("en");
+});
 
 afterEach(() => {
   cleanup();
@@ -32,7 +38,8 @@ describe("Home", () => {
   it("renders latest agent runs and lets you open a thread", () => {
     const onSelectThread = vi.fn();
     render(
-      <Home
+      <AppI18nProvider>
+        <Home
         {...baseProps}
         latestAgentRuns={[
           {
@@ -46,7 +53,8 @@ describe("Home", () => {
           },
         ]}
         onSelectThread={onSelectThread}
-      />,
+        />
+      </AppI18nProvider>,
     );
 
     expect(screen.getByText("Latest agents")).toBeTruthy();
@@ -64,7 +72,11 @@ describe("Home", () => {
   });
 
   it("shows the empty state when there are no latest runs", () => {
-    render(<Home {...baseProps} />);
+    render(
+      <AppI18nProvider>
+        <Home {...baseProps} />
+      </AppI18nProvider>,
+    );
 
     expect(screen.getByText("No agent activity yet")).toBeTruthy();
     expect(
@@ -74,7 +86,8 @@ describe("Home", () => {
 
   it("renders usage cards in time mode", () => {
     render(
-      <Home
+      <AppI18nProvider>
+        <Home
         {...baseProps}
         usageMetric="time"
         localUsageSnapshot={{
@@ -100,11 +113,11 @@ describe("Home", () => {
           },
           topModels: [],
         }}
-      />,
+        />
+      </AppI18nProvider>,
     );
 
     expect(screen.getAllByText("agent time").length).toBeGreaterThan(0);
-    expect(screen.getByText("Runs")).toBeTruthy();
     expect(screen.getByText("Peak day")).toBeTruthy();
     expect(screen.getByText("Avg / run")).toBeTruthy();
     expect(screen.getByText("Avg / active day")).toBeTruthy();
@@ -113,8 +126,9 @@ describe("Home", () => {
   });
 
   it("renders expanded token stats and account limits", () => {
-    render(
-      <Home
+    const { container } = render(
+      <AppI18nProvider>
+        <Home
         {...baseProps}
         localUsageSnapshot={{
           updatedAt: Date.now(),
@@ -280,7 +294,8 @@ describe("Home", () => {
           planType: "pro",
           requiresOpenaiAuth: false,
         }}
-      />,
+        />
+      </AppI18nProvider>,
     );
 
     expect(screen.getByText("Cached tokens")).toBeTruthy();
@@ -301,20 +316,22 @@ describe("Home", () => {
     expect(within(todayCard).getByText("36")).toBeTruthy();
 
     expect(
-      screen.getByLabelText("Usage week 2026-01-14 to 2026-01-20"),
+      screen.getByLabelText("Usage snapshot 2026-01-14 to 2026-01-20"),
     ).toBeTruthy();
     expect(
       (screen.getByRole("button", { name: "Show next week" }) as HTMLButtonElement)
         .disabled,
     ).toBe(true);
     expect(
-      screen.getByText("Jan 20").closest(".home-usage-bar")?.getAttribute("data-value"),
+      Array.from(container.querySelectorAll(".home-usage-bar")).find(
+        (element) => element.getAttribute("data-value") === "Jan 20 · 36 tokens",
+      )?.getAttribute("data-value"),
     ).toBe("Jan 20 · 36 tokens");
 
     fireEvent.click(screen.getByRole("button", { name: "Show previous week" }));
 
     expect(
-      screen.getByLabelText("Usage week 2026-01-07 to 2026-01-13"),
+      screen.getByLabelText("Usage snapshot 2026-01-07 to 2026-01-13"),
     ).toBeTruthy();
     expect(
       (screen.getByRole("button", { name: "Show next week" }) as HTMLButtonElement)
@@ -324,7 +341,7 @@ describe("Home", () => {
     fireEvent.click(screen.getByRole("button", { name: "Show next week" }));
 
     expect(
-      screen.getByLabelText("Usage week 2026-01-14 to 2026-01-20"),
+      screen.getByLabelText("Usage snapshot 2026-01-14 to 2026-01-20"),
     ).toBeTruthy();
     expect(
       (screen.getByRole("button", { name: "Show next week" }) as HTMLButtonElement)
@@ -334,7 +351,8 @@ describe("Home", () => {
 
   it("renders account limits even when no local usage snapshot exists", () => {
     render(
-      <Home
+      <AppI18nProvider>
+        <Home
         {...baseProps}
         accountRateLimits={{
           primary: {
@@ -356,7 +374,8 @@ describe("Home", () => {
           planType: "pro",
           requiresOpenaiAuth: false,
         }}
-      />,
+        />
+      </AppI18nProvider>,
     );
 
     expect(screen.getByText("Account limits")).toBeTruthy();

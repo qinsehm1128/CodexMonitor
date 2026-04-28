@@ -39,6 +39,7 @@ import { useDebouncedValue } from "../../../hooks/useDebouncedValue";
 import { getUsageLabels } from "../utils/usageLabels";
 import { formatRelativeTimeShort } from "../../../utils/time";
 import type { ThreadStatusById } from "../../../utils/threadStatus";
+import { useT } from "@/i18n/useT";
 
 const COLLAPSED_GROUPS_STORAGE_KEY = "codexmonitor.collapsedGroups";
 const UNGROUPED_COLLAPSE_ID = "__ungrouped__";
@@ -69,14 +70,8 @@ function getThreadBucketId(timestamp: number, nowMs: number): ThreadBucket["id"]
 function groupFlatThreadRowsByTimeBucket(
   groups: FlatThreadRootGroup[],
   nowMs: number,
+  bucketLabels: Record<ThreadBucket["id"], string>,
 ): ThreadBucket[] {
-  const bucketLabels: Record<ThreadBucket["id"], string> = {
-    now: "Now",
-    today: "Earlier today",
-    yesterday: "Yesterday",
-    week: "This week",
-    older: "Older",
-  };
   const order: ThreadBucket["id"][] = ["now", "today", "yesterday", "week", "older"];
   const bucketMap = new Map<ThreadBucket["id"], FlatThreadRow[]>();
 
@@ -217,6 +212,7 @@ export const Sidebar = memo(function Sidebar({
   onWorkspaceDragLeave,
   onWorkspaceDrop,
 }: SidebarProps) {
+  const { t } = useT();
   const [expandedWorkspaces, setExpandedWorkspaces] = useState(
     new Set<string>(),
   );
@@ -358,9 +354,11 @@ export const Sidebar = memo(function Sidebar({
   const accountButtonLabel = accountEmail
     ? accountEmail
     : accountInfo?.type === "apikey"
-      ? "API key"
-      : "Sign in to Codex";
-  const accountActionLabel = accountEmail ? "Switch account" : "Sign in";
+      ? t("app.sidebar.account.apiKey")
+      : t("app.sidebar.account.signInToCodex");
+  const accountActionLabel = accountEmail
+    ? t("app.sidebar.account.switchAccount")
+    : t("app.sidebar.account.signIn");
   const showAccountSwitcher = Boolean(activeWorkspaceId);
   const accountSwitchDisabled = accountSwitching || !activeWorkspaceId;
   const accountCancelDisabled = !accountSwitching || !activeWorkspaceId;
@@ -673,9 +671,19 @@ export const Sidebar = memo(function Sidebar({
     () => flatThreadRootGroups.flatMap((group) => group.rows),
     [flatThreadRootGroups],
   );
+  const bucketLabels = useMemo<Record<ThreadBucket["id"], string>>(
+    () => ({
+      now: t("app.sidebar.buckets.now"),
+      today: t("app.sidebar.buckets.today"),
+      yesterday: t("app.sidebar.buckets.yesterday"),
+      week: t("app.sidebar.buckets.week"),
+      older: t("app.sidebar.buckets.older"),
+    }),
+    [t],
+  );
   const threadBuckets = useMemo(
-    () => groupFlatThreadRowsByTimeBucket(flatThreadRootGroups, Date.now()),
-    [flatThreadRootGroups],
+    () => groupFlatThreadRowsByTimeBucket(flatThreadRootGroups, Date.now(), bucketLabels),
+    [bucketLabels, flatThreadRootGroups],
   );
 
   const scrollFadeDeps = useMemo(
@@ -830,6 +838,12 @@ export const Sidebar = memo(function Sidebar({
     [],
   );
   const pinnedRootCount = useMemo(() => countRootRows(pinnedThreadRows), [pinnedThreadRows]);
+  const localizedWorkspaceDropText =
+    workspaceDropText === "Adding Project..."
+      ? t("app.sidebar.dragDrop.addingProject")
+      : workspaceDropText === "Drop Project Here"
+        ? t("app.sidebar.dragDrop.dropProjectHere")
+        : workspaceDropText;
 
   useEffect(() => {
     if (!addMenuAnchor) {
@@ -906,7 +920,7 @@ export const Sidebar = memo(function Sidebar({
           {workspaceDropText === "Drop Project Here" && (
             <FolderOpen className="workspace-drop-overlay-icon" aria-hidden />
           )}
-          {workspaceDropText}
+          {localizedWorkspaceDropText}
         </div>
       </div>
       <div
@@ -920,7 +934,9 @@ export const Sidebar = memo(function Sidebar({
           {pinnedThreadRows.length > 0 && (
             <div className="pinned-section">
               <div className="sidebar-section-header">
-                <div className="sidebar-section-title">Pinned conversations</div>
+                <div className="sidebar-section-title">
+                  {t("app.sidebar.sections.pinnedConversations")}
+                </div>
                 <div className="sidebar-section-count">{pinnedRootCount}</div>
               </div>
               <PinnedThreadList
@@ -1015,15 +1031,15 @@ export const Sidebar = memo(function Sidebar({
           {!groupedWorkspacesForRender.length && (
             <div className="empty">
               {isSearchActive
-                ? "No conversations match your search."
-                : "Add a workspace to start."}
+                ? t("app.sidebar.empty.noSearchMatches")
+                : t("app.sidebar.empty.addWorkspace")}
             </div>
           )}
           {isThreadsOnlyMode &&
             groupedWorkspacesForRender.length > 0 &&
             flatThreadRows.length === 0 &&
             pinnedThreadRows.length === 0 && (
-              <div className="empty">No conversations yet.</div>
+              <div className="empty">{t("app.sidebar.empty.noConversations")}</div>
             )}
         </div>
       </div>

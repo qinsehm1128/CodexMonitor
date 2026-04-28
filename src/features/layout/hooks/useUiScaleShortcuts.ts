@@ -4,6 +4,7 @@ import { getCurrentWebview } from "@tauri-apps/api/webview";
 import type { AppSettings } from "../../../types";
 import { clampUiScale, UI_SCALE_STEP } from "../../../utils/uiScale";
 import { isMacPlatform } from "../../../utils/shortcuts";
+import { i18n } from "@/i18n/config";
 
 type UseUiScaleShortcutsOptions = {
   settings: AppSettings;
@@ -38,8 +39,12 @@ export function useUiScaleShortcuts({
     return isMacPlatform() ? "Cmd" : "Ctrl";
   }, []);
 
-  const scaleShortcutTitle = `${scaleShortcutLabel}+ and ${scaleShortcutLabel}-, ${scaleShortcutLabel}+0 to reset.`;
-  const scaleShortcutText = `Shortcuts: ${scaleShortcutLabel}+ and ${scaleShortcutLabel}-, ${scaleShortcutLabel}+0 to reset.`;
+  const scaleShortcutTitle = i18n.t("app.scaleShortcuts.title", {
+    shortcut: scaleShortcutLabel,
+  });
+  const scaleShortcutText = i18n.t("app.scaleShortcuts.text", {
+    shortcut: scaleShortcutLabel,
+  });
 
   const saveQueueRef = useRef(Promise.resolve());
   const queueSaveSettings = useCallback(

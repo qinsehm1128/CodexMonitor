@@ -1,4 +1,5 @@
 import type { AccountSnapshot, LocalUsageDay } from "../../types";
+import { i18n } from "@/i18n/config";
 
 export function formatCompactNumber(value: number | null | undefined) {
   if (value === null || value === undefined) {
@@ -23,7 +24,9 @@ export function formatCount(value: number | null | undefined) {
   if (value === null || value === undefined) {
     return "--";
   }
-  return new Intl.NumberFormat().format(value);
+  return new Intl.NumberFormat(i18n.resolvedLanguage === "zh-CN" ? "zh-CN" : "en-US").format(
+    value,
+  );
 }
 
 export function formatDuration(valueMs: number | null | undefined) {
@@ -71,21 +74,27 @@ export function formatDayLabel(value: string | null | undefined) {
   if (Number.isNaN(date.getTime())) {
     return value;
   }
-  return new Intl.DateTimeFormat(undefined, {
+  return new Intl.DateTimeFormat(i18n.resolvedLanguage === "zh-CN" ? "zh-CN" : "en-US", {
     month: "short",
     day: "numeric",
   }).format(date);
 }
 
 export function formatWeekRange(days: LocalUsageDay[]) {
+  const t = i18n.t.bind(i18n);
   if (days.length === 0) {
-    return "No usage data";
+    return t("home.usage.noUsageData");
   }
   const first = days[0];
   const last = days[days.length - 1];
   const firstLabel = formatDayLabel(first?.day);
   const lastLabel = formatDayLabel(last?.day);
-  return first?.day === last?.day ? firstLabel : `${firstLabel} to ${lastLabel}`;
+  return first?.day === last?.day
+    ? firstLabel
+    : t("home.usage.rangeSpan", {
+        start: firstLabel,
+        end: lastLabel,
+      });
 }
 
 export function isUsageDayActive(day: LocalUsageDay) {
@@ -107,28 +116,32 @@ export function formatPlanType(value: string | null | undefined) {
 export function formatAccountTypeLabel(
   value: AccountSnapshot["type"] | null | undefined,
 ) {
+  const t = i18n.t.bind(i18n);
   if (value === "chatgpt") {
-    return "ChatGPT account";
+    return t("home.usage.accountChatgpt");
   }
   if (value === "apikey") {
-    return "API key";
+    return t("home.usage.accountApiKey");
   }
-  return "Connected account";
+  return t("home.usage.accountConnected");
 }
 
 export function formatWindowDuration(valueMins: number | null | undefined) {
+  const t = i18n.t.bind(i18n);
   if (typeof valueMins !== "number" || !Number.isFinite(valueMins) || valueMins <= 0) {
     return null;
   }
   if (valueMins >= 60 * 24) {
     const days = Math.round(valueMins / (60 * 24));
-    return `${days} day${days === 1 ? "" : "s"} window`;
+    return t(days === 1 ? "home.usage.dayWindowOne" : "home.usage.dayWindowOther", {
+      count: days,
+    });
   }
   if (valueMins >= 60) {
     const hours = Math.round(valueMins / 60);
-    return `${hours}h window`;
+    return t("home.usage.hourWindow", { count: hours });
   }
-  return `${Math.round(valueMins)}m window`;
+  return t("home.usage.minuteWindow", { count: Math.round(valueMins) });
 }
 
 export function buildWindowCaption(
@@ -149,14 +162,17 @@ export function formatCreditsBalance(value: string | null | undefined) {
   if (!Number.isFinite(numeric) || numeric <= 0) {
     return trimmed;
   }
-  return new Intl.NumberFormat(undefined, {
+  return new Intl.NumberFormat(i18n.resolvedLanguage === "zh-CN" ? "zh-CN" : "en-US", {
     maximumFractionDigits: 0,
   }).format(numeric);
 }
 
 export function formatDayCount(value: number | null | undefined) {
+  const t = i18n.t.bind(i18n);
   if (value === null || value === undefined) {
     return "--";
   }
-  return `${value} day${value === 1 ? "" : "s"}`;
+  return t(value === 1 ? "home.usage.dayCountOne" : "home.usage.dayCountOther", {
+    count: value,
+  });
 }

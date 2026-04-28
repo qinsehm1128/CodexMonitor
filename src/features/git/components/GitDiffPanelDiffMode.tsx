@@ -13,6 +13,7 @@ import {
   isMissingRepo,
   normalizeRootPath,
 } from "./GitDiffPanel.utils";
+import { i18n } from "@/i18n/config";
 
 type GitDiffModeContentProps = {
   error: string | null | undefined;
@@ -134,11 +135,11 @@ export function GitDiffModeContent({
   const gitRootNotFound = isGitRootNotFound(error);
   const showInitGitRepo = Boolean(onInitGitRepo) && missingRepo && !gitRootNotFound;
   const gitRootTitle = gitRootNotFound
-    ? "Git root folder not found."
+    ? i18n.t("git.panel.gitRootNotFound")
     : missingRepo
-      ? "This workspace isn't a Git repository yet."
-      : "Choose a repo for this workspace.";
-  const generateCommitMessageTooltip = "Generate commit message";
+      ? i18n.t("git.panel.notGitRepo")
+      : i18n.t("git.panel.chooseRepo");
+  const generateCommitMessageTooltip = i18n.t("git.panel.generateCommitMessage");
   const showWorktreeApplyInUnstaged = showApplyWorktree && unstagedFiles.length > 0;
   const showWorktreeApplyInStaged =
     showApplyWorktree && unstagedFiles.length === 0 && stagedFiles.length > 0;
@@ -158,7 +159,7 @@ export function GitDiffModeContent({
                 }}
                 disabled={initGitRepoLoading || gitRootScanLoading}
               >
-                {initGitRepoLoading ? "Initializing..." : "Initialize Git"}
+                {initGitRepoLoading ? i18n.t("git.panel.initializing") : i18n.t("git.panel.initializeGit")}
               </button>
             </div>
           )}
@@ -169,10 +170,10 @@ export function GitDiffModeContent({
               onClick={onScanGitRoots}
               disabled={!onScanGitRoots || gitRootScanLoading || initGitRepoLoading}
             >
-              Scan workspace
+              {i18n.t("git.panel.scanWorkspace")}
             </button>
             <label className="git-root-depth">
-              <span>Depth</span>
+              <span>{i18n.t("git.panel.depth")}</span>
               <select
                 className="git-root-select"
                 value={gitRootScanDepth}
@@ -200,7 +201,7 @@ export function GitDiffModeContent({
                 }}
                 disabled={gitRootScanLoading || initGitRepoLoading}
               >
-                Pick folder
+                {i18n.t("git.panel.pickFolder")}
               </button>
             )}
             {hasGitRoot && onClearGitRoot && (
@@ -210,18 +211,18 @@ export function GitDiffModeContent({
                 onClick={onClearGitRoot}
                 disabled={gitRootScanLoading || initGitRepoLoading}
               >
-                Use workspace root
+                {i18n.t("git.panel.useWorkspaceRoot")}
               </button>
             )}
           </div>
           {gitRootScanLoading && (
-            <div className="diff-empty">Scanning for repositories...</div>
+            <div className="diff-empty">{i18n.t("git.panel.scanningRepositories")}</div>
           )}
           {!gitRootScanLoading &&
             !gitRootScanError &&
             gitRootScanHasScanned &&
             gitRootCandidates.length === 0 && (
-              <div className="diff-empty">No repositories found.</div>
+              <div className="diff-empty">{i18n.t("git.panel.noRepositoriesFound")}</div>
             )}
           {gitRootCandidates.length > 0 && (
             <div className="git-root-list">
@@ -236,7 +237,7 @@ export function GitDiffModeContent({
                     onClick={() => onSelectGitRoot?.(path)}
                   >
                     <span className="git-root-path">{path}</span>
-                    {isActive && <span className="git-root-tag">Active</span>}
+                    {isActive && <span className="git-root-tag">{i18n.t("git.panel.active")}</span>}
                   </button>
                 );
               })}
@@ -249,7 +250,7 @@ export function GitDiffModeContent({
           <div className="commit-message-input-wrapper">
             <textarea
               className="commit-message-input"
-              placeholder="Commit message..."
+              placeholder={i18n.t("git.panel.commitMessagePlaceholder")}
               value={commitMessage}
               onChange={(event) => onCommitMessageChange?.(event.target.value)}
               disabled={commitMessageLoading}
@@ -269,7 +270,7 @@ export function GitDiffModeContent({
               data-tooltip={generateCommitMessageTooltip}
               data-tooltip-placement="bottom"
               data-tooltip-align="end"
-              aria-label="Generate commit message"
+              aria-label={i18n.t("git.panel.generateCommitMessage")}
             >
               {commitMessageLoading ? (
                 <MagicSparkleLoaderIcon className="commit-message-loader" />
@@ -303,7 +304,7 @@ export function GitDiffModeContent({
                 ) : (
                   <Download size={14} aria-hidden />
                 )}
-                <span>{pullLoading ? "Pulling..." : "Pull"}</span>
+                <span>{pullLoading ? i18n.t("git.panel.pulling") : i18n.t("git.panel.pull")}</span>
                 <span className="push-count">{commitsBehind}</span>
               </button>
             )}
@@ -315,7 +316,7 @@ export function GitDiffModeContent({
                 disabled={!onPush || pushLoading || commitsBehind > 0}
                 title={
                   commitsBehind > 0
-                    ? "Remote is ahead. Pull first, or use Sync."
+                    ? i18n.t("git.panel.pullLatestAndPush")
                     : `Push ${commitsAhead} commit${commitsAhead > 1 ? "s" : ""}`
                 }
               >
@@ -324,7 +325,7 @@ export function GitDiffModeContent({
                 ) : (
                   <Upload size={14} aria-hidden />
                 )}
-                <span>Push</span>
+                <span>{i18n.t("git.panel.push")}</span>
                 <span className="push-count">{commitsAhead}</span>
               </button>
             )}
@@ -342,7 +343,7 @@ export function GitDiffModeContent({
               ) : (
                 <RotateCcw size={14} aria-hidden />
               )}
-              <span>{syncLoading ? "Syncing..." : "Sync (pull then push)"}</span>
+              <span>{syncLoading ? i18n.t("git.panel.syncing") : i18n.t("git.panel.syncPullThenPush")}</span>
             </button>
           )}
         </div>
@@ -351,12 +352,12 @@ export function GitDiffModeContent({
         !stagedFiles.length &&
         !unstagedFiles.length &&
         commitsAhead === 0 &&
-        commitsBehind === 0 && <div className="diff-empty">No changes detected.</div>}
+        commitsBehind === 0 && <div className="diff-empty">{i18n.t("git.panel.noChangesDetected")}</div>}
       {(stagedFiles.length > 0 || unstagedFiles.length > 0) && (
         <>
           {stagedFiles.length > 0 && (
             <DiffSection
-              title="Staged"
+              title={i18n.t("git.panel.staged")}
               files={stagedFiles}
               section="staged"
               selectedFiles={selectedFiles}
@@ -376,7 +377,7 @@ export function GitDiffModeContent({
           )}
           {unstagedFiles.length > 0 && (
             <DiffSection
-              title="Unstaged"
+              title={i18n.t("git.panel.unstaged")}
               files={unstagedFiles}
               section="unstaged"
               selectedFiles={selectedFiles}

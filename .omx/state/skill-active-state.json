@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "active": true,
+  "skill": "ralph",
+  "keyword": "$ralph",
+  "phase": "executing",
+  "activated_at": "2026-04-09T07:49:59.926Z",
+  "updated_at": "2026-04-09T09:19:57.917Z",
+  "source": "keyword-detector",
+  "thread_id": "019d70f3-f55f-72e0-98e8-e034d524bebd",
+  "turn_id": "019d716b-d96c-7453-b3a5-c260ad04081d",
+  "active_skills": [
+    {
+      "skill": "ralph",
+      "phase": "executing",
+      "active": true,
+      "activated_at": "2026-04-09T07:49:59.926Z",
+      "updated_at": "2026-04-09T09:19:57.917Z"
+    }
+  ],
+  "input_lock": {
+    "active": false,
+    "scope": "deep-interview-auto-approval",
+    "acquired_at": "2026-04-09T06:36:08.918Z",
+    "blocked_inputs": [
+      "yes",
+      "y",
+      "proceed",
+      "continue",
+      "ok",
+      "sure",
+      "go ahead",
+      "next i should"
+    ],
+    "message": "Deep interview is active; auto-approval shortcuts are blocked until the interview finishes.",
+    "released_at": "2026-04-09T08:48:08.983Z",
+    "exit_reason": "handoff"
+  },
+  "initialized_mode": "ralph",
+  "initialized_state_path": ".omx/state/ralph-state.json",
+  "iteration": 2,
+  "last_turn_at": "2026-04-09T09:20:20.006Z"
+}

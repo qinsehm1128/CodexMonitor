@@ -3,6 +3,7 @@ import Settings from "lucide-react/dist/esm/icons/settings";
 import User from "lucide-react/dist/esm/icons/user";
 import X from "lucide-react/dist/esm/icons/x";
 import { useEffect } from "react";
+import { useT } from "@/i18n/useT";
 import {
   MenuTrigger,
   PopoverSurface,
@@ -71,6 +72,7 @@ export function SidebarBottomRail({
   onSwitchAccount,
   onCancelSwitchAccount,
 }: SidebarBottomRailProps) {
+  const { t } = useT();
   const accountMenu = useMenuController();
   const {
     isOpen: accountMenuOpen,
@@ -89,18 +91,18 @@ export function SidebarBottomRail({
     <div className="sidebar-bottom-rail">
       <div className="sidebar-usage-panel">
         <div className="sidebar-usage-header">
-          <div className="sidebar-usage-kicker">Usage</div>
+          <div className="sidebar-usage-kicker">{t("app.sidebar.usage.title")}</div>
           {creditsLabel && <div className="sidebar-usage-credits">{creditsLabel}</div>}
         </div>
         <div className="sidebar-usage-list">
           <UsageRow
-            label="Session"
+            label={t("app.sidebar.usage.session")}
             percent={sessionPercent}
             resetLabel={sessionResetLabel}
           />
           {showWeekly && (
             <UsageRow
-              label="Weekly"
+              label={t("app.sidebar.usage.weekly")}
               percent={weeklyPercent}
               resetLabel={weeklyResetLabel}
             />
@@ -118,18 +120,20 @@ export function SidebarBottomRail({
               className="ghost sidebar-labeled-button sidebar-account-trigger"
               activeClassName="is-open"
               onClick={toggleAccountMenu}
-              aria-label="Account"
+              aria-label={t("app.sidebar.account.account")}
             >
               <span className="sidebar-account-trigger-content">
                 <span className="sidebar-account-avatar" aria-hidden>
                   <User size={12} aria-hidden />
                 </span>
-                <span className="sidebar-account-trigger-label">Account</span>
+                <span className="sidebar-account-trigger-label">
+                  {t("app.sidebar.account.account")}
+                </span>
               </span>
             </MenuTrigger>
             {accountMenuOpen && (
               <PopoverSurface className="sidebar-account-popover" role="dialog">
-                <div className="sidebar-account-title">Account</div>
+                <div className="sidebar-account-title">{t("app.sidebar.account.account")}</div>
                 <div className="sidebar-account-value">{accountLabel}</div>
                 <div className="sidebar-account-actions-row">
                   <button
@@ -152,8 +156,8 @@ export function SidebarBottomRail({
                       className="secondary sidebar-account-cancel"
                       onClick={onCancelSwitchAccount}
                       disabled={accountCancelDisabled}
-                      aria-label="Cancel account switch"
-                      title="Cancel"
+                      aria-label={t("app.sidebar.account.cancelAccountSwitch")}
+                      title={t("common.actions.cancel")}
                     >
                       <X size={12} aria-hidden />
                     </button>
@@ -168,19 +172,19 @@ export function SidebarBottomRail({
               className="ghost sidebar-labeled-button sidebar-utility-button"
               type="button"
               onClick={onOpenSettings}
-              aria-label="Open settings"
+              aria-label={t("app.sidebar.usage.openSettings")}
             >
               <span className="sidebar-labeled-button-icon" aria-hidden>
                 <Settings size={14} aria-hidden />
               </span>
-              <span>Settings</span>
+              <span>{t("app.sidebar.usage.settings")}</span>
             </button>
           {showDebugButton && (
             <button
               className="ghost sidebar-utility-button"
               type="button"
               onClick={onOpenDebug}
-              aria-label="Open debug log"
+              aria-label={t("app.sidebar.usage.openDebugLog")}
             >
               <ScrollText size={14} aria-hidden />
             </button>

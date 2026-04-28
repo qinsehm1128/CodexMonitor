@@ -10,6 +10,7 @@ import {
 } from "@testing-library/react";
 import type { ComponentProps } from "react";
 import { describe, expect, it, vi } from "vitest";
+import { AppI18nProvider } from "@/i18n/provider";
 import type { AppSettings, WorkspaceInfo } from "@/types";
 import {
   connectWorkspace,
@@ -108,6 +109,7 @@ const baseSettings: AppSettings = {
   lastComposerModelId: null,
   lastComposerReasoningEffort: null,
   uiScale: 1,
+  uiLanguage: "en",
   theme: "system",
   usageShowRemaining: false,
   showMessageFilePath: true,
@@ -227,7 +229,11 @@ const renderDisplaySection = (
     onRemoveDictationModel: vi.fn(),
   };
 
-  render(<SettingsView {...props} />);
+  render(
+    <AppI18nProvider>
+      <SettingsView {...props} />
+    </AppI18nProvider>,
+  );
   fireEvent.click(screen.getByRole("button", { name: "Display & Sound" }));
 
   return { onUpdateAppSettings, onToggleTransparency };
@@ -272,7 +278,11 @@ const renderComposerSection = (
     initialSection: "composer",
   };
 
-  render(<SettingsView {...props} />);
+  render(
+    <AppI18nProvider>
+      <SettingsView {...props} />
+    </AppI18nProvider>,
+  );
   return { onUpdateAppSettings };
 };
 
@@ -320,7 +330,11 @@ const renderAboutSection = (
     onRemoveDictationModel: vi.fn(),
   };
 
-  render(<SettingsView {...props} />);
+  render(
+    <AppI18nProvider>
+      <SettingsView {...props} />
+    </AppI18nProvider>,
+  );
   fireEvent.click(screen.getByRole("button", { name: "About" }));
 
   return { onUpdateAppSettings, onToggleAutomaticAppUpdateChecks };
@@ -398,7 +412,11 @@ const renderFeaturesSection = (
     initialSection: "features",
   };
 
-  render(<SettingsView {...props} />);
+  render(
+    <AppI18nProvider>
+      <SettingsView {...props} />
+    </AppI18nProvider>,
+  );
   return { onUpdateAppSettings };
 };
 
@@ -494,7 +512,11 @@ const renderEnvironmentsSection = (
     initialSection: "environments",
   });
 
-  const renderResult = render(<SettingsView {...buildProps()} />);
+  const renderResult = render(
+    <AppI18nProvider>
+      <SettingsView {...buildProps()} />
+    </AppI18nProvider>,
+  );
   return {
     onUpdateAppSettings,
     onUpdateWorkspaceSettings,
@@ -503,7 +525,12 @@ const renderEnvironmentsSection = (
         appSettings?: Partial<AppSettings>;
         groupedWorkspaces?: ComponentProps<typeof SettingsView>["groupedWorkspaces"];
       } = {},
-    ) => renderResult.rerender(<SettingsView {...buildProps(nextOptions)} />),
+    ) =>
+      renderResult.rerender(
+        <AppI18nProvider>
+          <SettingsView {...buildProps(nextOptions)} />
+        </AppI18nProvider>,
+      ),
   };
 };
 
@@ -1907,34 +1934,36 @@ describe("SettingsView mobile layout", () => {
 
     try {
       const rendered = render(
-        <SettingsView
-          workspaceGroups={[]}
-          groupedWorkspaces={[]}
-          ungroupedLabel="Ungrouped"
-          onClose={vi.fn()}
-          onMoveWorkspace={vi.fn()}
-          onDeleteWorkspace={vi.fn()}
-          onCreateWorkspaceGroup={vi.fn().mockResolvedValue(null)}
-          onRenameWorkspaceGroup={vi.fn().mockResolvedValue(null)}
-          onMoveWorkspaceGroup={vi.fn().mockResolvedValue(null)}
-          onDeleteWorkspaceGroup={vi.fn().mockResolvedValue(null)}
-          onAssignWorkspaceGroup={vi.fn().mockResolvedValue(null)}
-          reduceTransparency={false}
-          onToggleTransparency={vi.fn()}
-          appSettings={baseSettings}
-          openAppIconById={{}}
-          onUpdateAppSettings={vi.fn().mockResolvedValue(undefined)}
-          onRunDoctor={vi.fn().mockResolvedValue(createDoctorResult())}
-          onUpdateWorkspaceSettings={vi.fn().mockResolvedValue(undefined)}
-          scaleShortcutTitle="Scale shortcut"
-          scaleShortcutText="Use Command +/-"
-          onTestNotificationSound={vi.fn()}
-          onTestSystemNotification={vi.fn()}
-          dictationModelStatus={null}
-          onDownloadDictationModel={vi.fn()}
-          onCancelDictationDownload={vi.fn()}
-          onRemoveDictationModel={vi.fn()}
-        />,
+        <AppI18nProvider>
+          <SettingsView
+            workspaceGroups={[]}
+            groupedWorkspaces={[]}
+            ungroupedLabel="Ungrouped"
+            onClose={vi.fn()}
+            onMoveWorkspace={vi.fn()}
+            onDeleteWorkspace={vi.fn()}
+            onCreateWorkspaceGroup={vi.fn().mockResolvedValue(null)}
+            onRenameWorkspaceGroup={vi.fn().mockResolvedValue(null)}
+            onMoveWorkspaceGroup={vi.fn().mockResolvedValue(null)}
+            onDeleteWorkspaceGroup={vi.fn().mockResolvedValue(null)}
+            onAssignWorkspaceGroup={vi.fn().mockResolvedValue(null)}
+            reduceTransparency={false}
+            onToggleTransparency={vi.fn()}
+            appSettings={baseSettings}
+            openAppIconById={{}}
+            onUpdateAppSettings={vi.fn().mockResolvedValue(undefined)}
+            onRunDoctor={vi.fn().mockResolvedValue(createDoctorResult())}
+            onUpdateWorkspaceSettings={vi.fn().mockResolvedValue(undefined)}
+            scaleShortcutTitle="Scale shortcut"
+            scaleShortcutText="Use Command +/-"
+            onTestNotificationSound={vi.fn()}
+            onTestSystemNotification={vi.fn()}
+            dictationModelStatus={null}
+            onDownloadDictationModel={vi.fn()}
+            onCancelDictationDownload={vi.fn()}
+            onRemoveDictationModel={vi.fn()}
+          />
+        </AppI18nProvider>,
       );
 
       expect(
@@ -1954,7 +1983,7 @@ describe("SettingsView mobile layout", () => {
       await waitFor(() => {
         expect(
           within(rendered.container).getByRole("button", {
-            name: "Back to settings sections",
+            name: "Sections",
           }),
         ).toBeTruthy();
         expect(
@@ -1966,7 +1995,7 @@ describe("SettingsView mobile layout", () => {
 
       fireEvent.click(
         within(rendered.container).getByRole("button", {
-          name: "Back to settings sections",
+          name: "Sections",
         }),
       );
 
@@ -2205,7 +2234,7 @@ describe("SettingsView Shortcuts", () => {
       fireEvent.change(searchInput, { target: { value: "no-such-shortcut" } });
     });
     await waitFor(() => {
-      expect(screen.getByText('No shortcuts match "no-such-shortcut".')).toBeTruthy();
+      expect(screen.getByText("No shortcuts match no-such-shortcut.")).toBeTruthy();
     });
 
     await act(async () => {
@@ -2213,7 +2242,7 @@ describe("SettingsView Shortcuts", () => {
     });
     await waitFor(() => {
       expect(screen.getByText("Toggle terminal panel")).toBeTruthy();
-      expect(screen.queryByText('No shortcuts match "no-such-shortcut".')).toBeNull();
+      expect(screen.queryByText("No shortcuts match no-such-shortcut.")).toBeNull();
     });
   });
 });

@@ -206,6 +206,7 @@ export type RemoteBackendTarget = {
   lastConnectedAtMs?: number | null;
 };
 export type ThemePreference = "system" | "light" | "dark" | "dim";
+export type UiLanguage = "en" | "zh-CN";
 export type PersonalityPreference = "friendly" | "pragmatic";
 export type FollowUpMessageBehavior = "queue" | "steer";
 export type ComposerSendIntent = "default" | "queue" | "steer";
@@ -268,6 +269,7 @@ export type AppSettings = {
   lastComposerModelId: string | null;
   lastComposerReasoningEffort: string | null;
   uiScale: number;
+  uiLanguage: UiLanguage;
   theme: ThemePreference;
   usageShowRemaining: boolean;
   showMessageFilePath: boolean;

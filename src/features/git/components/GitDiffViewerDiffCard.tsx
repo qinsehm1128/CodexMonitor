@@ -23,6 +23,7 @@ import {
   normalizePatchName,
   parseRawDiffLines,
 } from "./GitDiffViewer.utils";
+import { i18n } from "@/i18n/config";
 
 type HoveredDiffLine =
   | {
@@ -151,12 +152,12 @@ export const DiffCard = memo(function DiffCard({
 
   const placeholder = useMemo(() => {
     if (isLoading) {
-      return "Loading diff...";
+      return i18n.t("git.panel.refreshingDiff");
     }
     if (ignoreWhitespaceChanges && !entry.diff.trim()) {
-      return "No non-whitespace changes.";
+      return i18n.t("app.gitViewer.noNonWhitespaceChanges");
     }
-    return "Diff unavailable.";
+    return i18n.t("app.gitViewer.diffUnavailable");
   }, [entry.diff, ignoreWhitespaceChanges, isLoading]);
 
   const parsedLines = useMemo(() => {
@@ -211,8 +212,8 @@ export const DiffCard = memo(function DiffCard({
           <button
             type="button"
             className="diff-viewer-header-action diff-viewer-header-action--discard"
-            title="Discard changes in this file"
-            aria-label="Discard changes in this file"
+            title={i18n.t("app.gitViewer.discardChangesInFile")}
+            aria-label={i18n.t("app.gitViewer.discardChangesInFile")}
             onClick={(event) => {
               event.preventDefault();
               event.stopPropagation();
@@ -224,7 +225,7 @@ export const DiffCard = memo(function DiffCard({
         )}
       </div>
       {useInteractiveDiff && selectedLines && reviewActions.length > 0 ? (
-        <div className="diff-viewer-review-actions" role="toolbar" aria-label="PR selection actions">
+        <div className="diff-viewer-review-actions" role="toolbar" aria-label={i18n.t("app.gitViewer.prSelectionActions")}>
           {reviewActions.map((action) => (
             <button
               key={action.id}
@@ -246,11 +247,13 @@ export const DiffCard = memo(function DiffCard({
             className="ghost diff-viewer-review-action"
             onClick={onClearSelection}
           >
-            Clear
+            {i18n.t("app.gitViewer.clear")}
           </button>
           {pullRequestReviewThreadId ? (
             <span className="diff-viewer-review-thread">
-              Last review thread: {pullRequestReviewThreadId}
+              {i18n.t("app.gitViewer.lastReviewThread", {
+                id: pullRequestReviewThreadId,
+              })}
             </span>
           ) : null}
         </div>
@@ -267,8 +270,8 @@ export const DiffCard = memo(function DiffCard({
                     <button
                       type="button"
                       className="diff-viewer-line-action-button"
-                      aria-label="Ask for changes on hovered line"
-                      title="Ask for changes on this line"
+                      aria-label={i18n.t("app.gitViewer.askForChangesHovered")}
+                      title={i18n.t("app.gitViewer.askForChangesLine")}
                       onMouseDown={(event) => {
                         event.preventDefault();
                         event.stopPropagation();

@@ -15,6 +15,7 @@ import RefreshCw from "lucide-react/dist/esm/icons/refresh-cw";
 import GitBranch from "lucide-react/dist/esm/icons/git-branch";
 import Settings from "lucide-react/dist/esm/icons/settings";
 import Search from "lucide-react/dist/esm/icons/search";
+import { i18n } from "@/i18n/config";
 
 export const DEFAULT_LAUNCH_SCRIPT_ICON: LaunchScriptIconId = "play";
 
@@ -36,22 +37,22 @@ const ICON_MAP: Record<LaunchScriptIconId, LucideIcon> = {
   logs: Search,
 };
 
-const ICON_LABELS: Record<LaunchScriptIconId, string> = {
-  play: "Play",
-  build: "Build",
-  debug: "Debug",
-  wrench: "Wrench",
-  terminal: "Terminal",
-  code: "Code",
-  server: "Server",
-  database: "Database",
-  package: "Package",
-  test: "Test",
-  lint: "Lint",
-  dev: "Dev",
-  git: "Git",
-  config: "Config",
-  logs: "Logs",
+const ICON_LABEL_KEYS: Record<LaunchScriptIconId, string> = {
+  play: "app.launchScripts.icons.play",
+  build: "app.launchScripts.icons.build",
+  debug: "app.launchScripts.icons.debug",
+  wrench: "app.launchScripts.icons.wrench",
+  terminal: "app.launchScripts.icons.terminal",
+  code: "app.launchScripts.icons.code",
+  server: "app.launchScripts.icons.server",
+  database: "app.launchScripts.icons.database",
+  package: "app.launchScripts.icons.package",
+  test: "app.launchScripts.icons.test",
+  lint: "app.launchScripts.icons.lint",
+  dev: "app.launchScripts.icons.dev",
+  git: "app.launchScripts.icons.git",
+  config: "app.launchScripts.icons.config",
+  logs: "app.launchScripts.icons.logs",
 };
 
 function isLaunchScriptIconId(value: string): value is LaunchScriptIconId {
@@ -65,13 +66,15 @@ export function coerceLaunchScriptIconId(value?: string | null): LaunchScriptIco
   return isLaunchScriptIconId(value) ? value : DEFAULT_LAUNCH_SCRIPT_ICON;
 }
 
-export const LAUNCH_SCRIPT_ICON_OPTIONS = Object.keys(ICON_MAP).map((id) => {
-  const iconId = coerceLaunchScriptIconId(id);
-  return {
-    id: iconId,
-    label: ICON_LABELS[iconId],
-  };
-});
+export function getLaunchScriptIconOptions() {
+  return Object.keys(ICON_MAP).map((id) => {
+    const iconId = coerceLaunchScriptIconId(id);
+    return {
+      id: iconId,
+      label: i18n.t(ICON_LABEL_KEYS[iconId]),
+    };
+  });
+}
 
 export function getLaunchScriptIcon(id?: string | null): LucideIcon {
   const iconId = coerceLaunchScriptIconId(id);
@@ -80,5 +83,5 @@ export function getLaunchScriptIcon(id?: string | null): LucideIcon {
 
 export function getLaunchScriptIconLabel(id?: string | null): string {
   const iconId = coerceLaunchScriptIconId(id);
-  return ICON_LABELS[iconId];
+  return i18n.t(ICON_LABEL_KEYS[iconId]);
 }

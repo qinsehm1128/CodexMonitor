@@ -3,6 +3,7 @@ import type { GitHubPullRequest, GitHubPullRequestComment } from "../../../types
 import { formatRelativeTime } from "../../../utils/time";
 import { Markdown } from "../../messages/components/Markdown";
 import type { DiffStats } from "./GitDiffViewer.types";
+import { i18n } from "@/i18n/config";
 
 export type PullRequestSummaryProps = {
   pullRequest: GitHubPullRequest;
@@ -59,7 +60,7 @@ export const PullRequestSummary = memo(function PullRequestSummary({
   }, [pullRequest.number]);
 
   return (
-    <section className="diff-viewer-pr" aria-label="Pull request summary">
+    <section className="diff-viewer-pr" aria-label={i18n.t("app.gitViewer.pullRequestSummary")}>
       <div className="diff-viewer-pr-header">
         <div className="diff-viewer-pr-header-row">
           <div className="diff-viewer-pr-title">
@@ -74,7 +75,7 @@ export const PullRequestSummary = memo(function PullRequestSummary({
                 type="button"
                 className="ghost diff-viewer-pr-jump"
                 onClick={onJumpToFirstFile}
-                aria-label="Jump to first file"
+                aria-label={i18n.t("app.gitViewer.jumpToFirstFile")}
               >
                 <span className="diff-viewer-pr-jump-add">
                   +{diffStats.additions}
@@ -89,7 +90,9 @@ export const PullRequestSummary = memo(function PullRequestSummary({
               <button
                 type="button"
                 className="ghost diff-viewer-pr-checkout"
-                aria-label={`Checkout PR #${pullRequest.number} branch`}
+                aria-label={i18n.t("app.gitViewer.checkoutBranch", {
+                  number: pullRequest.number,
+                })}
                 disabled={isCheckingOut}
                 onClick={() => {
                   setIsCheckingOut(true);
@@ -98,7 +101,9 @@ export const PullRequestSummary = memo(function PullRequestSummary({
                   });
                 }}
               >
-                {isCheckingOut ? "Checking out..." : "Checkout Branch"}
+                {isCheckingOut
+                  ? i18n.t("app.gitViewer.checkingOut")
+                  : i18n.t("app.gitViewer.checkoutBranchAction")}
               </button>
             ) : null}
           </div>
@@ -116,7 +121,7 @@ export const PullRequestSummary = memo(function PullRequestSummary({
             {pullRequest.baseRefName} ← {pullRequest.headRefName}
           </span>
           {pullRequest.isDraft && (
-            <span className="diff-viewer-pr-pill">Draft</span>
+            <span className="diff-viewer-pr-pill">{i18n.t("app.gitViewer.draft")}</span>
           )}
         </div>
       </div>
@@ -127,15 +132,16 @@ export const PullRequestSummary = memo(function PullRequestSummary({
             className="diff-viewer-pr-markdown markdown"
           />
         ) : (
-          <div className="diff-viewer-pr-empty">No description provided.</div>
+          <div className="diff-viewer-pr-empty">{i18n.t("app.gitViewer.noDescriptionProvided")}</div>
         )}
       </div>
       <div className="diff-viewer-pr-timeline">
         <div className="diff-viewer-pr-timeline-header">
-          <span className="diff-viewer-pr-timeline-title">Activity</span>
+          <span className="diff-viewer-pr-timeline-title">{i18n.t("app.gitViewer.activity")}</span>
           <span className="diff-viewer-pr-timeline-count">
-            {sortedComments.length} comment
-            {sortedComments.length === 1 ? "" : "s"}
+            {sortedComments.length === 1
+              ? i18n.t("app.gitViewer.commentCount", { count: sortedComments.length })
+              : i18n.t("app.gitViewer.commentCountPlural", { count: sortedComments.length })}
           </span>
           {hiddenCommentCount > 0 && (
             <button
@@ -143,24 +149,24 @@ export const PullRequestSummary = memo(function PullRequestSummary({
               className="ghost diff-viewer-pr-timeline-button"
               onClick={() => setIsTimelineExpanded(true)}
             >
-              Show all
+              {i18n.t("app.gitViewer.showAll")}
             </button>
           )}
           {isTimelineExpanded &&
             sortedComments.length > visibleCommentCount && (
               <button
-                type="button"
-                className="ghost diff-viewer-pr-timeline-button"
-                onClick={() => setIsTimelineExpanded(false)}
-              >
-                Collapse
-              </button>
-            )}
+              type="button"
+              className="ghost diff-viewer-pr-timeline-button"
+              onClick={() => setIsTimelineExpanded(false)}
+            >
+              {i18n.t("app.gitViewer.collapse")}
+            </button>
+          )}
         </div>
         <div className="diff-viewer-pr-timeline-list">
           {pullRequestCommentsLoading && (
             <div className="diff-viewer-pr-timeline-state">
-              Loading comments…
+              {i18n.t("app.gitViewer.loadingComments")}
             </div>
           )}
           {pullRequestCommentsError && (
@@ -172,13 +178,14 @@ export const PullRequestSummary = memo(function PullRequestSummary({
             !pullRequestCommentsError &&
             !sortedComments.length && (
               <div className="diff-viewer-pr-timeline-state">
-                No comments yet.
+                {i18n.t("app.gitViewer.noCommentsYet")}
               </div>
             )}
           {hiddenCommentCount > 0 && !isTimelineExpanded && (
             <div className="diff-viewer-pr-timeline-divider">
-              {hiddenCommentCount} earlier comment
-              {hiddenCommentCount === 1 ? "" : "s"}
+              {hiddenCommentCount === 1
+                ? i18n.t("app.gitViewer.earlierComment", { count: hiddenCommentCount })
+                : i18n.t("app.gitViewer.earlierCommentPlural", { count: hiddenCommentCount })}
             </div>
           )}
           {visibleComments.map((comment) => {
@@ -204,7 +211,7 @@ export const PullRequestSummary = memo(function PullRequestSummary({
                     />
                   ) : (
                     <div className="diff-viewer-pr-timeline-text">
-                      No comment body.
+                      {i18n.t("app.gitViewer.noCommentBody")}
                     </div>
                   )}
                 </div>
