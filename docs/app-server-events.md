@@ -1,4 +1,4 @@
-# App-Server Events Reference (Codex `19702e190ebf16f789617ca5f16bfc373c238fe7`)
+# App-Server Events Reference (Codex `7d72fc8f5323175d9d323222a5b98b4bb8a361d5`)
 
 This document helps agents quickly answer:
 - Which app-server events CodexMonitor supports right now.
@@ -123,24 +123,34 @@ events are currently not routed:
 - `configWarning`
 - `command/exec/outputDelta`
 - `deprecationNotice`
+- `externalAgentConfig/import/completed`
+- `fs/changed`
 - `fuzzyFileSearch/sessionCompleted`
 - `fuzzyFileSearch/sessionUpdated`
-- `item/mcpToolCall/progress`
+- `guardianWarning`
 - `item/autoApprovalReview/completed`
 - `item/autoApprovalReview/started`
+- `item/fileChange/patchUpdated`
+- `item/mcpToolCall/progress`
 - `mcpServer/oauthLogin/completed`
 - `mcpServer/startupStatus/updated`
 - `model/rerouted`
+- `model/verification`
 - `rawResponseItem/completed`
 - `serverRequest/resolved`
 - `skills/changed`
 - `thread/compacted` (deprecated; intentionally not routed)
+- `thread/goal/cleared`
+- `thread/goal/updated`
 - `thread/realtime/closed`
 - `thread/realtime/error`
 - `thread/realtime/itemAdded`
 - `thread/realtime/outputAudio/delta`
+- `thread/realtime/sdp`
 - `thread/realtime/started`
-- `thread/realtime/transcriptUpdated`
+- `thread/realtime/transcript/delta`
+- `thread/realtime/transcript/done`
+- `warning`
 - `windows/worldWritableWarning`
 - `windowsSandbox/setupCompleted`
 
@@ -151,6 +161,7 @@ These are v2 request methods CodexMonitor currently sends to Codex app-server:
 - `thread/start`
 - `thread/resume`
 - `thread/fork`
+- `thread/read`
 - `thread/list`
 - `thread/archive`
 - `thread/compact/start`
@@ -178,6 +189,7 @@ Notes:
 Compared against Codex v2 request methods, CodexMonitor currently does not send:
 
 - `account/logout`
+- `account/sendAddCreditsNudgeEmail`
 - `command/exec`
 - `command/exec/resize`
 - `command/exec/terminate`
@@ -187,6 +199,10 @@ Compared against Codex v2 request methods, CodexMonitor currently does not send:
 - `config/read`
 - `config/value/write`
 - `configRequirements/read`
+- `device/key/create`
+- `device/key/public`
+- `device/key/sign`
+- `experimentalFeature/enablement/set`
 - `externalAgentConfig/detect`
 - `externalAgentConfig/import`
 - `feedback/upload`
@@ -196,29 +212,44 @@ Compared against Codex v2 request methods, CodexMonitor currently does not send:
 - `fs/readDirectory`
 - `fs/readFile`
 - `fs/remove`
+- `fs/unwatch`
+- `fs/watch`
 - `fs/writeFile`
 - `fuzzyFileSearch/sessionStart`
 - `fuzzyFileSearch/sessionStop`
 - `fuzzyFileSearch/sessionUpdate`
+- `marketplace/add`
+- `marketplace/remove`
+- `marketplace/upgrade`
 - `mcpServer/oauth/login`
+- `mcpServer/resource/read`
+- `mcpServer/tool/call`
+- `memory/reset`
 - `mock/experimentalMethod`
 - `plugin/install`
 - `plugin/list`
 - `plugin/read`
 - `plugin/uninstall`
 - `skills/config/write`
+- `thread/approveGuardianDeniedAction`
 - `thread/backgroundTerminals/clean`
 - `thread/decrement_elicitation`
+- `thread/goal/clear`
+- `thread/goal/get`
+- `thread/goal/set`
 - `thread/increment_elicitation`
+- `thread/inject_items`
 - `thread/loaded/list`
+- `thread/memoryMode/set`
 - `thread/metadata/update`
-- `thread/read`
 - `thread/realtime/appendAudio`
 - `thread/realtime/appendText`
+- `thread/realtime/listVoices`
 - `thread/realtime/start`
 - `thread/realtime/stop`
 - `thread/rollback`
 - `thread/shellCommand`
+- `thread/turns/list`
 - `thread/unarchive`
 - `thread/unsubscribe`
 - `windowsSandbox/setupStart`
